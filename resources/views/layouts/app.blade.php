@@ -8,6 +8,9 @@
     <!-- Google Fonts & Material Symbols -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script id="tailwind-config">
@@ -108,6 +111,7 @@
         } catch(_e){}
     </script>
     <style>
+        [x-cloak] { display: none !important; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8f9fb; }
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
@@ -124,7 +128,7 @@
 
     @include('components.navbar')
 
-    <main class="pt-16 pb-32 flex-grow">
+    <main class="pt-20 md:pt-24 pb-32 flex-grow">
         @yield('content')
     </main>
 
@@ -133,16 +137,7 @@
     @include('components.bottom-nav')
 
     <script>
-        window.addEventListener('scroll', () => {
-            const header = document.getElementById('main-header');
-            if (header) {
-                if (window.scrollY > 50) {
-                    header.classList.add('shadow-lg', 'bg-primary/95');
-                } else {
-                    header.classList.remove('shadow-lg', 'bg-primary/95');
-                }
-            }
-        });
+        // scroll handler - header now uses backdrop-blur, no color change needed
     </script>
     @stack('scripts')
 </body>

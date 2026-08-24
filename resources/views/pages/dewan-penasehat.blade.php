@@ -53,66 +53,25 @@
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Member 1 -->
-            <div class="bg-surface-white border border-border-subtle rounded-xl p-6 hover:shadow-lg transition-all duration-300 group">
+            @forelse($anggota as $p)
+            <div class="bg-surface-white border border-border-subtle rounded-2xl p-6 hover:shadow-lg hover:border-primary/20 transition-all duration-300 group">
                 <div class="flex flex-col items-center text-center">
-                    <div class="w-24 h-24 rounded-full bg-surface-container-low mb-4 overflow-hidden border-2 border-primary/10 group-hover:border-secondary transition-colors">
-                        <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3brFNpWf8oo7W_4nx_M2AqJBGpOsP1i1ADg36W7TQ9zH8ZgIRq9QshXkI48xEYrzeiVqy5noeUgy1q_ELAe512yWQieTLDqUCxeTPbVw6Ng9v4LgCe0ui2v1ee-1IV-GM9oZcaG4Y8QUKNJznLKYY2SWnGbiDkbSn7ToBm85n876AeOHOMc4euRCMZxbMaTmIaXJ1rovHChIQ4Fn-6wwofB2do6wgJgNRUBFxVlVY3WfW4hjzL2_vJInNvrKFLsXp_-dgtGbBZcY"/>
+                    <div class="w-24 h-24 rounded-full bg-slate-100 mb-4 overflow-hidden border-2 border-primary/10 group-hover:border-secondary shadow-sm transition-colors flex items-center justify-center">
+                        <img class="w-full h-full object-cover object-top" src="{{ $p->foto_url }}" alt="{{ $p->nama }}"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"/>
+                        <div class="hidden w-full h-full items-center justify-center bg-slate-100 text-slate-400">
+                            <span class="material-symbols-outlined text-4xl">person</span>
+                        </div>
                     </div>
-                    <h3 class="font-headline-sm text-headline-sm text-primary mb-1">Sri Sultan Hamengku Buwono X</h3>
-                    <p class="font-label-caps text-label-caps text-secondary">Gubernur DIY</p>
+                    <h3 class="font-headline-sm text-headline-sm text-primary mb-1">{{ $p->nama }}</h3>
+                    <span class="inline-block px-3 py-1 bg-amber-50 text-secondary border border-amber-200/60 rounded-full font-label-caps text-label-caps text-xs font-bold mt-1">
+                        {{ $p->provinsi ? 'Gubernur ' . $p->provinsi : $p->jabatan }}
+                    </span>
                 </div>
             </div>
-            <!-- Member 2 -->
-            <div class="bg-surface-white border border-border-subtle rounded-xl p-6 hover:shadow-lg transition-all duration-300 group">
-                <div class="flex flex-col items-center text-center">
-                    <div class="w-24 h-24 rounded-full bg-surface-container-low mb-4 overflow-hidden border-2 border-primary/10 group-hover:border-secondary transition-colors">
-                        <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBf0SaHwyYjad9JIWG3nouSPyAO5e1eUL-opKMuoQtvJbDzIRRiPmT0aV6Ln9Z1B_1_cdCYkhFLISA2IpdmjAgK_Vy6Z7gwO1vXmUtIVPoN0Qg8DZ9eNz6He2nnqd15QVRR5YrSWGkuGNl75wRpvgnU7GBaA2z7Drc1P6saaYxPqdE4Xghfun772qOReskyTqhNkziHoTMdbP6G4EqgV7bT_u6RZz7gvOBmixFYzrMXRxfGyvxkQS2--S8QzTOjBeCvyuzEhKGhKQ"/>
-                    </div>
-                    <h3 class="font-headline-sm text-headline-sm text-primary mb-1">Dr. Ir. Pramono Anung, MM.</h3>
-                    <p class="font-label-caps text-label-caps text-secondary">Gubernur DKI Jakarta</p>
-                </div>
-            </div>
-            <!-- Member 3 -->
-            <div class="bg-surface-white border border-border-subtle rounded-xl p-6 hover:shadow-lg transition-all duration-300 group">
-                <div class="flex flex-col items-center text-center">
-                    <div class="w-24 h-24 rounded-full bg-surface-container-low mb-4 overflow-hidden border-2 border-primary/10 group-hover:border-secondary transition-colors">
-                        <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKo6RLW55wByeNSq1imqcZaRWaGFpW4QRTeVGRGFZN8FELDDDJ5Lgf4El2-QpPexJGU0i92ecLRuYsMfBE661JuEmLd4DthHbFivgDI9NHuhmXOOp2PD9FaYyNzhGbZJy4L2SvTLuIwqXhJdWUnvl2LpcC-JJjNPvyAB8gdPrfrrsDMFB7y43Rq22kWhi28z9Wav7clYCKb0EXUVO13T7hQjCKF4oBYLpoe_ErMAsT1LmrRmQ_Z8KBjIOuYbzveIqM2mYHGwV8fOk"/>
-                    </div>
-                    <h3 class="font-headline-sm text-headline-sm text-primary mb-1">H. Mahyeldi Ansharullah, S.P</h3>
-                    <p class="font-label-caps text-label-caps text-secondary">Gubernur Sumatera Barat</p>
-                </div>
-            </div>
-            <!-- Member 4 -->
-            <div class="bg-surface-white border border-border-subtle rounded-xl p-6 hover:shadow-lg transition-all duration-300 group">
-                <div class="flex flex-col items-center text-center">
-                    <div class="w-24 h-24 rounded-full bg-surface-container-low mb-4 overflow-hidden border-2 border-primary/10 group-hover:border-secondary transition-colors">
-                        <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA33sQE4LB9U83iGdndBVtEItPpzBNOd53bTWUbLIKdp9KjogHcD-Yiyins7FVKYrvor_29ybu_r633GTtHI4FPjuV9waizTYMuS8z0VSXn1-FqWCqtcLCk-FJMQZB0iWsksRW9uuM425qusuKVeBtkJYqzL8I2yaZd0w4_66zNcIiktgjTcGOPUA_Tls0puoG40rYsv0H2ogkKjsdg759T0slfAnnQ1saujbbd9dMCMqPaDpJbJO3OBbrpbSHp0-5i6M-uaq1mDWE"/>
-                    </div>
-                    <h3 class="font-headline-sm text-headline-sm text-primary mb-1">H. Muzakir Manaf</h3>
-                    <p class="font-label-caps text-label-caps text-secondary">Gubernur Aceh</p>
-                </div>
-            </div>
-            <!-- Member 5 -->
-            <div class="bg-surface-white border border-border-subtle rounded-xl p-6 hover:shadow-lg transition-all duration-300 group">
-                <div class="flex flex-col items-center text-center">
-                    <div class="w-24 h-24 rounded-full bg-surface-container-low mb-4 overflow-hidden border-2 border-primary/10 group-hover:border-secondary transition-colors">
-                        <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRYCiKsrcSxRJACMUrGZ4z6Mc38gUYmAAereUcLRrc5_29j22AEgrIJZh9vhA3_dLYPAIo0C90jWb0AD41EOyP3fM_46NP2EFu-GahhzFxqvPFhVRLipzKEjQUzbmix7o8R2_ivr4-8X0XZsoRbn4XAUiX-b9LlORm0fmwGO9vwYR9iMrAY-3DxE6fcmdWcfKFZHK0rfnnQe8lgTIdQ2WBdjbtCxqjkWU9VKm-zr18OPKfcTz_40ehZ3cwKsSmDALYuGlyjM-ttoE"/>
-                    </div>
-                    <h3 class="font-headline-sm text-headline-sm text-primary mb-1">Dr. John Tabo, SE., MBA.</h3>
-                    <p class="font-label-caps text-label-caps text-secondary">Gubernur Papua Pegunungan</p>
-                </div>
-            </div>
-            <!-- Member 6 -->
-            <div class="bg-surface-white border border-border-subtle rounded-xl p-6 hover:shadow-lg transition-all duration-300 group">
-                <div class="flex flex-col items-center text-center">
-                    <div class="w-24 h-24 rounded-full bg-surface-container-low mb-4 overflow-hidden border-2 border-primary/10 group-hover:border-secondary transition-colors">
-                        <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHXbEkDwP_xVefrDR4HbtZNfjFzWdfqKBEBO0LawfP7XKTLnZd_zuK_0lagd4bPPJNezXhjU0kU5jsr9ZKZkD4XVNv_56iTPPf4Wwi6bziBJ53Gw-gDtHtuW1XEoSS58zDsoLkUVFJjgAjq029sMiXWrXhCF8d763YCrn-4nqCJhIEx1L_Dy1LyOvOWpFyWQE6GAlwENY0TXYi0IlPYmE5wcjLh88ShnCEiXz7YQGaG--SiD2yfd-AbYUpRcAAYhwTYChPn4Eqoj8"/>
-                    </div>
-                    <h3 class="font-headline-sm text-headline-sm text-primary mb-1">E. Melkiades Laka Lena, S.Si</h3>
-                    <p class="font-label-caps text-label-caps text-secondary">Gubernur NTT</p>
-                </div>
-            </div>
+            @empty
+            <div class="col-span-3 text-center text-on-surface-variant py-12">Belum ada data Dewan Penasehat.</div>
+            @endforelse
         </div>
     </section>
 
@@ -124,18 +83,26 @@
                 <p class="font-body-md text-body-md text-on-primary/80 mb-stack-md">
                     Sebagai wadah koordinasi dan sinergi, Dewan Penasehat memiliki tanggung jawab krusial dalam menavigasi arah organisasi di tengah dinamika kebijakan nasional.
                 </p>
-                <ul class="space-y-4">
+                <ul class="space-y-3.5">
                     <li class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-secondary-fixed mt-1">verified_user</span>
-                        <span class="font-body-md text-body-md">Memberikan nasihat dan pertimbangan strategis kepada Dewan Pengurus APPSI.</span>
+                        <span class="material-symbols-outlined text-secondary-fixed mt-0.5">verified_user</span>
+                        <span class="font-body-md text-body-md">Memberikan nasihat dan pertimbangan strategis kepada Dewan Pengurus APPSI;</span>
                     </li>
                     <li class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-secondary-fixed mt-1">insights</span>
-                        <span class="font-body-md text-body-md">Memberikan pandangan terhadap arah kebijakan organisasi dan isu-isu strategis nasional.</span>
+                        <span class="material-symbols-outlined text-secondary-fixed mt-0.5">insights</span>
+                        <span class="font-body-md text-body-md">Memberikan pandangan terhadap arah kebijakan organisasi dan isu-isu strategis nasional;</span>
                     </li>
                     <li class="flex items-start gap-3">
-                        <span class="material-symbols-outlined text-secondary-fixed mt-1">shield</span>
-                        <span class="font-body-md text-body-md">Menjaga konsistensi nilai, visi, dan misi APPSI.</span>
+                        <span class="material-symbols-outlined text-secondary-fixed mt-0.5">shield</span>
+                        <span class="font-body-md text-body-md">Menjaga konsistensi nilai, visi, dan misi APPSI;</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-secondary-fixed mt-0.5">account_balance</span>
+                        <span class="font-body-md text-body-md">Mendukung penguatan peran pemerintah provinsi dalam sistem pemerintahan Negara Kesatuan Republik Indonesia;</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-secondary-fixed mt-0.5">gavel</span>
+                        <span class="font-body-md text-body-md">Menjadi rujukan etis dan strategis dalam pengambilan keputusan organisasi.</span>
                     </li>
                 </ul>
             </div>
