@@ -43,9 +43,30 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label for="jabatan" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Jabatan di Organisasi <span class="text-rose-500">*</span></label>
-                            <input type="text" id="jabatan" name="jabatan" value="{{ old('jabatan', $pengurus->jabatan ?? '') }}" required
+                            <input type="text" id="jabatan" name="jabatan" value="{{ old('jabatan', $pengurus->jabatan ?? '') }}" required list="list_jabatan"
                                 class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 focus:bg-white focus:outline-none focus:border-navy-900 focus:ring-1 focus:ring-navy-900 transition-colors"
-                                placeholder="Contoh: Ketua Umum / Ketua I / Koordinator Wilayah">
+                                placeholder="Ketik atau pilih nama jabatan...">
+                            <datalist id="list_jabatan">
+                                <option value="Ketua Umum">
+                                <option value="Wakil Ketua Umum">
+                                <option value="Sekretaris Jenderal">
+                                <option value="Bendahara">
+                                <option value="Wakil Bendahara">
+                                <option value="Ketua I">
+                                <option value="Ketua II">
+                                <option value="Ketua III">
+                                <option value="Ketua Dewan Penasehat">
+                                <option value="Anggota Dewan Penasehat">
+                                <option value="Ketua Dewan Pakar">
+                                <option value="Anggota Dewan Pakar">
+                                <option value="Kepala Sekretariat">
+                                <option value="Koordinator Wilayah Sumatera">
+                                <option value="Koordinator Wilayah Jawa & Bali">
+                                <option value="Koordinator Wilayah Kalimantan">
+                                <option value="Koordinator Wilayah Sulawesi">
+                                <option value="Koordinator Wilayah Nusa Tenggara">
+                                <option value="Koordinator Wilayah Maluku & Papua">
+                            </datalist>
                         </div>
 
                         <div>

@@ -194,18 +194,52 @@
 @section('content')
 <div class="max-w-[1240px] mx-auto px-4 md:px-8 py-6 space-y-6">
 
-    {{-- Breadcrumbs --}}
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200/80 pb-4">
-        <nav class="flex items-center gap-2 text-on-surface-variant font-label-caps text-label-caps text-xs">
-            <a class="hover:text-primary transition-colors" href="{{ route('home') }}">Beranda</a>
-            <span class="material-symbols-outlined text-sm">chevron_right</span>
-            <a class="hover:text-primary transition-colors" href="{{ route('pustaka', 'semua') }}">Pustaka</a>
-            @if($kategori !== 'semua')
-            <span class="material-symbols-outlined text-sm">chevron_right</span>
-            <span class="text-primary font-bold">{{ $aktifLabel }}</span>
+    {{-- Header & Breadcrumbs --}}
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200/80 pb-4">
+        <div>
+            <nav class="flex items-center gap-2 text-on-surface-variant font-label-caps text-label-caps text-xs mb-1">
+                <a class="hover:text-primary transition-colors" href="{{ route('home') }}">Beranda</a>
+                <span class="material-symbols-outlined text-sm">chevron_right</span>
+                <a class="hover:text-primary transition-colors" href="{{ route('pustaka', 'semua') }}">Pustaka</a>
+                @if($kategori !== 'semua')
+                <span class="material-symbols-outlined text-sm">chevron_right</span>
+                <span class="text-primary font-bold">{{ $aktifLabel }}</span>
+                @endif
+            </nav>
+            <h1 class="text-2xl md:text-3xl font-extrabold text-primary tracking-tight">
+                {{ $aktifLabel }}
+                @if($tahun)
+                    <span class="text-secondary font-semibold text-xl">Tahun {{ $tahun }}</span>
+                @endif
+            </h1>
+        </div>
+
+        <div class="flex items-center gap-3">
+            {{-- Sub-Filter Tahun (Tampil Otomatis Jika Ada Dokumen Bertahun di Kategori Ini) --}}
+            @if(isset($tahunList) && $tahunList->isNotEmpty())
+            <div class="flex items-center gap-1.5 overflow-x-auto hide-scrollbar bg-slate-100 p-1.5 rounded-xl border border-slate-200">
+                <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider px-2 shrink-0">Tahun:</span>
+                <a href="{{ route('pustaka', $kategori) . ($search ? '?q=' . urlencode($search) : '') }}"
+                   class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all shrink-0 {{ empty($tahun) ? 'bg-primary text-white shadow-2xs' : 'text-slate-600 hover:bg-white' }}">
+                    Semua
+                </a>
+                @foreach($tahunList as $thn)
+                    @php
+                        $isThnActive = ($tahun == $thn);
+                        $thnUrl = route('pustaka', $kategori) . '?tahun=' . $thn . ($search ? '&q=' . urlencode($search) : '');
+                    @endphp
+                    <a href="{{ $thnUrl }}"
+                       class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all shrink-0 {{ $isThnActive ? 'bg-primary text-white shadow-2xs' : 'text-slate-600 hover:bg-white' }}">
+                        {{ $thn }}
+                    </a>
+                @endforeach
+            </div>
             @endif
-        </nav>
-        <span class="text-xs font-semibold text-slate-500">{{ $dokumen->count() }} Dokumen</span>
+
+            <span class="text-xs font-bold text-slate-500 bg-white px-3 py-2 rounded-xl border border-slate-200 shrink-0">
+                {{ $dokumen->count() }} Dokumen
+            </span>
+        </div>
     </div>
 
     {{-- Document Grid --}}

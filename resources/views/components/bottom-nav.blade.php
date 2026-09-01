@@ -165,6 +165,16 @@
             </a>
 
             {{-- Data BPS: Inline di Mobile & Trigger Flyout di Desktop --}}
+            @php
+                $bpsTahunList = \App\Models\Pustaka::where('is_published', true)
+                    ->where('kategori', 'data_bps')
+                    ->whereNotNull('tahun')
+                    ->where('tahun', '!=', '')
+                    ->reorder('tahun', 'desc')
+                    ->select('tahun')
+                    ->distinct()
+                    ->pluck('tahun');
+            @endphp
             <div style="border-radius:12px; overflow:hidden; transition:background 0.15s;" id="bps-wrapper">
                 <div onclick="handleBpsClick(event)"
                      class="nav-popup-item"
@@ -178,16 +188,22 @@
 
                 {{-- Submenu Inline untuk Mobile (Layar HP) --}}
                 <div id="bps-accordion-content" style="display:none; padding:4px 10px 10px; background:#f8fafc; border-radius:0 0 12px 12px;">
-                    <div style="display:flex; gap:6px;">
-                        @foreach(['2018','2019','2020'] as $tahun)
+                    <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                        <a href="{{ route('pustaka', ['kategori' => 'data_bps']) }}"
+                           style="flex:1; text-align:center; min-width:60px; padding:6px 0; border-radius:8px; font-size:11px; font-weight:700;
+                                  text-decoration:none; transition:all 0.15s;
+                                  {{ empty(request()->get('tahun'))
+                                        ? 'background:#001647; color:white; box-shadow:0 2px 6px rgba(0,22,71,0.25);'
+                                        : 'background:white; color:#334155; border:1px solid #e2e8f0;' }}">
+                            Semua
+                        </a>
+                        @foreach($bpsTahunList as $tahun)
                         <a href="{{ route('pustaka', ['kategori' => 'data_bps', 'tahun' => $tahun]) }}"
-                           style="flex:1; text-align:center; padding:6px 0; border-radius:8px; font-size:12px; font-weight:700;
+                           style="flex:1; text-align:center; min-width:60px; padding:6px 0; border-radius:8px; font-size:11px; font-weight:700;
                                   text-decoration:none; transition:all 0.15s;
                                   {{ request()->get('tahun') == $tahun
                                         ? 'background:#001647; color:white; box-shadow:0 2px 6px rgba(0,22,71,0.25);'
-                                        : 'background:white; color:#334155; border:1px solid #e2e8f0;' }}"
-                           onmouseover="if('{{ request()->get('tahun') }}'!=='{{ $tahun }}'){this.style.background='#f1f5f9'}"
-                           onmouseout="if('{{ request()->get('tahun') }}'!=='{{ $tahun }}'){this.style.background='white'}">
+                                        : 'background:white; color:#334155; border:1px solid #e2e8f0;' }}">
                             {{ $tahun }}
                         </a>
                         @endforeach
@@ -213,23 +229,33 @@
                 border: 1px solid #e2e8f0;
                 box-shadow: 0 4px 32px rgba(0,22,71,0.13), 0 1px 4px rgba(0,0,0,0.05);
                 padding: 8px;
-                width: 140px;
+                width: 150px;
                 animation: popupSlideUp 0.2s cubic-bezier(0.22,1,0.36,1) forwards;">
 
         <p style="font-size:9px; font-weight:700; letter-spacing:0.1em; color:#94a3b8;
                   text-transform:uppercase; padding: 4px 12px 6px; margin:0;">Pilih Tahun</p>
 
-        @foreach(['2018','2019','2020'] as $tahun)
+        <a href="{{ route('pustaka', ['kategori' => 'data_bps']) }}"
+           style="display:flex; align-items:center; gap:8px;
+                  padding: 8px 12px; border-radius: 10px;
+                  text-decoration:none; transition: background 0.12s;
+                  {{ empty(request()->get('tahun')) ? 'background:#f0f4ff;' : '' }}"
+           onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='{{ empty(request()->get('tahun')) ? '#f0f4ff' : 'transparent' }}'">
+            <span class="material-symbols-outlined" style="font-size:16px; color:{{ empty(request()->get('tahun')) ? '#001647' : '#94a3b8' }};">apps</span>
+            <span style="font-size:12px; font-weight:700; color:{{ empty(request()->get('tahun')) ? '#001647' : '#334155' }};">Semua Tahun</span>
+        </a>
+
+        @foreach($bpsTahunList as $tahun)
         <a href="{{ route('pustaka', ['kategori' => 'data_bps', 'tahun' => $tahun]) }}"
            style="display:flex; align-items:center; gap:8px;
-                  padding: 9px 12px; border-radius: 10px;
+                  padding: 8px 12px; border-radius: 10px;
                   text-decoration:none; transition: background 0.12s;
                   {{ request()->get('tahun') == $tahun ? 'background:#f0f4ff;' : '' }}"
            onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='{{ request()->get('tahun') == $tahun ? '#f0f4ff' : 'transparent' }}'">
             <span class="material-symbols-outlined"
                   style="font-size:16px; color:{{ request()->get('tahun') == $tahun ? '#001647' : '#94a3b8' }};
                          {{ request()->get('tahun') == $tahun ? "font-variation-settings:'FILL' 1;" : '' }}">calendar_today</span>
-            <span style="font-size:13px; font-weight:700;
+            <span style="font-size:12px; font-weight:700;
                          color:{{ request()->get('tahun') == $tahun ? '#001647' : '#334155' }};">{{ $tahun }}</span>
             @if(request()->get('tahun') == $tahun)
             <span class="material-symbols-outlined" style="color:#001647; font-size:13px; margin-left:auto; font-variation-settings:'FILL' 1;">check_circle</span>

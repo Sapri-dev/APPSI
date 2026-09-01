@@ -56,8 +56,10 @@
     <!-- Mobile Header -->
     <header class="md:hidden bg-navy-900 text-white p-4 flex items-center justify-between shadow-md fixed top-0 left-0 right-0 z-50">
         <div class="flex items-center gap-3">
-            <span class="bg-amber-500 text-navy-950 font-bold px-2 py-1 rounded text-xs tracking-wider">ADMIN</span>
-            <span class="font-bold text-lg">APPSI Portal</span>
+            <div class="w-10 h-10 rounded-xl bg-white/10 p-1 flex items-center justify-center shrink-0 border border-white/10">
+                <img src="{{ asset('images/Logo-appsi-emblem.png') }}" alt="Logo APPSI" class="w-full h-full object-contain">
+            </div>
+            <span class="font-bold text-base">APPSI Admin</span>
         </div>
         <button id="mobile-menu-btn" class="p-2 rounded-lg bg-navy-800 text-slate-200">
             <span class="material-symbols-outlined">menu</span>
@@ -70,77 +72,132 @@
     <div id="sidebar-backdrop" class="fixed inset-0 bg-black/50 z-30 hidden md:hidden"></div>
 
     <!-- Sidebar Navigation -->
-    <aside id="sidebar" class="fixed top-0 left-0 h-screen w-64 bg-navy-900 text-slate-200 hidden md:flex flex-col z-40 border-r border-navy-800">
+    <aside id="sidebar" class="fixed top-0 left-0 h-screen w-64 bg-navy-950 text-slate-200 hidden md:flex flex-col z-40 border-r border-navy-900 shadow-xl">
         <!-- Logo & Brand Header -->
-        <div class="p-5 border-b border-navy-800/80 flex items-center justify-between">
+        <div class="p-5 border-b border-white/10 bg-navy-950">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center font-black text-navy-950 text-xl shadow-lg">
-                    A
+                <div class="w-11 h-11 rounded-xl bg-white p-1 flex items-center justify-center shrink-0 shadow-md">
+                    <img src="{{ asset('images/Logo-appsi-emblem.png') }}" alt="Logo APPSI" class="w-full h-full object-contain">
                 </div>
-                <div>
-                    <h1 class="font-bold text-white leading-tight">APPSI Admin</h1>
-                    <p class="text-xs text-slate-400">Control Panel</p>
+                <div class="min-w-0">
+                    <h1 class="font-bold text-white text-sm tracking-wide leading-tight">APPSI</h1>
+                    <p class="text-[11px] text-slate-400 font-medium truncate">Portal Administrator</p>
                 </div>
             </div>
         </div>
 
         <!-- Navigation Menu -->
-        <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
-            <div class="text-[11px] font-semibold tracking-wider text-slate-400 uppercase px-3 pt-2 pb-1">Menu Utama</div>
+        <nav class="flex-1 px-3 py-4 space-y-1.5 overflow-y-auto">
+            <div class="text-[10px] font-bold tracking-widest text-slate-400/80 uppercase px-3 pt-1 pb-1.5">Menu Utama</div>
             
-            <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all {{ request()->routeIs('admin.dashboard') ? 'bg-amber-500 text-navy-950 font-bold shadow-md' : 'text-slate-300 hover:bg-navy-800 hover:text-white' }}">
-                <span class="material-symbols-outlined">dashboard</span>
+            <!-- Dashboard -->
+            <a href="{{ route('admin.dashboard') }}"
+               class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('admin.dashboard') ? 'bg-amber-500 text-navy-950 font-bold shadow-md shadow-amber-500/20' : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
+                <span class="material-symbols-outlined text-[19px] {{ request()->routeIs('admin.dashboard') ? 'text-navy-950' : 'text-slate-400' }}">dashboard</span>
                 <span>Dashboard</span>
             </a>
 
-            <a href="{{ route('admin.berita.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all {{ request()->routeIs('admin.berita.*') ? 'bg-amber-500 text-navy-950 font-bold shadow-md' : 'text-slate-300 hover:bg-navy-800 hover:text-white' }}">
-                <span class="material-symbols-outlined">newspaper</span>
-                <span>Berita & Artikel</span>
+            <!-- Berita & Artikel -->
+            <a href="{{ route('admin.berita.index') }}"
+               class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('admin.berita.*') ? 'bg-amber-500 text-navy-950 font-bold shadow-md shadow-amber-500/20' : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
+                <span class="material-symbols-outlined text-[19px] {{ request()->routeIs('admin.berita.*') ? 'text-navy-950' : 'text-slate-400' }}">newspaper</span>
+                <span>Berita &amp; Artikel</span>
             </a>
 
-            <a href="{{ route('admin.pengurus.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all {{ request()->routeIs('admin.pengurus.*') ? 'bg-amber-500 text-navy-950 font-bold shadow-md' : 'text-slate-300 hover:bg-navy-800 hover:text-white' }}">
-                <span class="material-symbols-outlined">groups</span>
-                <span>Pengurus & Organisasi</span>
+            <!-- Pengurus & Organisasi with Collapsible Tree Submenu -->
+            <div x-data="{ open: {{ request()->routeIs('admin.pengurus.*') ? 'true' : 'false' }} }" class="space-y-0.5">
+                <button type="button" @click="open = !open"
+                    class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer {{ request()->routeIs('admin.pengurus.*') ? 'bg-white/10 text-amber-400 font-bold border border-white/10 shadow-xs' : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-[19px] {{ request()->routeIs('admin.pengurus.*') ? 'text-amber-400' : 'text-slate-400' }}">groups</span>
+                        <span>Pengurus &amp; Dewan</span>
+                    </div>
+                    <span class="material-symbols-outlined text-base text-slate-400 transition-transform duration-200" :class="open ? 'rotate-180 text-amber-400' : ''">expand_more</span>
+                </button>
+
+                <!-- Submenu Tree -->
+                <div x-show="open" x-cloak x-transition class="ml-4 pl-3 border-l border-slate-700/60 py-1 space-y-0.5 my-1">
+                    <a href="{{ route('admin.pengurus.index', ['jenis' => 'pengurus']) }}"
+                       class="block px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('admin.pengurus.*') && request('jenis') === 'pengurus' ? 'text-amber-400 font-bold bg-amber-500/10' : 'text-slate-400 hover:text-white hover:bg-white/5' }}">
+                        Dewan Pengurus
+                    </a>
+                    <a href="{{ route('admin.pengurus.index', ['jenis' => 'penasehat']) }}"
+                       class="block px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('admin.pengurus.*') && request('jenis') === 'penasehat' ? 'text-amber-400 font-bold bg-amber-500/10' : 'text-slate-400 hover:text-white hover:bg-white/5' }}">
+                        Dewan Penasehat
+                    </a>
+                    <a href="{{ route('admin.pengurus.index', ['jenis' => 'pakar']) }}"
+                       class="block px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('admin.pengurus.*') && request('jenis') === 'pakar' ? 'text-amber-400 font-bold bg-amber-500/10' : 'text-slate-400 hover:text-white hover:bg-white/5' }}">
+                        Dewan Pakar
+                    </a>
+                    <a href="{{ route('admin.pengurus.index', ['jenis' => 'sekretariat']) }}"
+                       class="block px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('admin.pengurus.*') && request('jenis') === 'sekretariat' ? 'text-amber-400 font-bold bg-amber-500/10' : 'text-slate-400 hover:text-white hover:bg-white/5' }}">
+                        Sekretariat
+                    </a>
+                    <a href="{{ route('admin.pengurus.index') }}"
+                       class="block px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('admin.pengurus.index') && !request('jenis') ? 'text-amber-400 font-bold bg-amber-500/10' : 'text-slate-400 hover:text-white hover:bg-white/5' }}">
+                        Semua Anggota
+                    </a>
+                </div>
+            </div>
+
+            <!-- Pustaka & Dokumen -->
+            <a href="{{ route('admin.pustaka.index') }}"
+               class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('admin.pustaka.*') ? 'bg-amber-500 text-navy-950 font-bold shadow-md shadow-amber-500/20' : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
+                <span class="material-symbols-outlined text-[19px] {{ request()->routeIs('admin.pustaka.*') ? 'text-navy-950' : 'text-slate-400' }}">folder_shared</span>
+                <span>Pustaka &amp; Dokumen</span>
             </a>
 
-            <a href="{{ route('admin.pustaka.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all {{ request()->routeIs('admin.pustaka.*') ? 'bg-amber-500 text-navy-950 font-bold shadow-md' : 'text-slate-300 hover:bg-navy-800 hover:text-white' }}">
-                <span class="material-symbols-outlined">folder_shared</span>
-                <span>Pustaka & Dokumen</span>
+            <!-- Provinsi Anggota -->
+            <a href="{{ route('admin.provinsi.index') }}"
+               class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('admin.provinsi.*') ? 'bg-amber-500 text-navy-950 font-bold shadow-md shadow-amber-500/20' : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
+                <span class="material-symbols-outlined text-[19px] {{ request()->routeIs('admin.provinsi.*') ? 'text-navy-950' : 'text-slate-400' }}">map</span>
+                <span>Provinsi Anggota</span>
             </a>
 
-            <a href="{{ route('admin.provinsi.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all {{ request()->routeIs('admin.provinsi.*') ? 'bg-amber-500 text-navy-950 font-bold shadow-md' : 'text-slate-300 hover:bg-navy-800 hover:text-white' }}">
-                <span class="material-symbols-outlined">map</span>
-                <span>38 Provinsi</span>
-            </a>
+            <div class="text-[10px] font-bold tracking-widest text-slate-400/80 uppercase px-3 pt-5 pb-1.5">Pengaturan &amp; Akses</div>
 
-            <div class="text-[11px] font-semibold tracking-wider text-slate-400 uppercase px-3 pt-6 pb-1">Sistem</div>
-
-            <a href="{{ route('admin.pengaturan.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all {{ request()->routeIs('admin.pengaturan.*') ? 'bg-amber-500 text-navy-950 font-bold shadow-md' : 'text-slate-300 hover:bg-navy-800 hover:text-white' }}">
-                <span class="material-symbols-outlined">settings</span>
+            <!-- Pengaturan Website -->
+            <a href="{{ route('admin.pengaturan.index') }}"
+               class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('admin.pengaturan.*') ? 'bg-amber-500 text-navy-950 font-bold shadow-md shadow-amber-500/20' : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
+                <span class="material-symbols-outlined text-[19px] {{ request()->routeIs('admin.pengaturan.*') ? 'text-navy-950' : 'text-slate-400' }}">settings</span>
                 <span>Pengaturan Website</span>
             </a>
 
-            <a href="{{ route('home') }}" target="_blank" class="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-slate-400 hover:bg-navy-800 hover:text-white transition-all">
-                <span class="material-symbols-outlined">open_in_new</span>
+            <!-- Akun Pengelola (Hanya untuk Super Administrator) -->
+            @if(auth()->user()->isSuperAdmin())
+            <a href="{{ route('admin.users.index') }}"
+               class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('admin.users.*') ? 'bg-amber-500 text-navy-950 font-bold shadow-md shadow-amber-500/20' : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
+                <span class="material-symbols-outlined text-[19px] {{ request()->routeIs('admin.users.*') ? 'text-navy-950' : 'text-slate-400' }}">manage_accounts</span>
+                <span>Akun Pengelola</span>
+            </a>
+            @endif
+
+            <!-- Lihat Website -->
+            <a href="{{ route('home') }}" target="_blank"
+               class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-400 hover:bg-white/5 hover:text-white transition-all">
+                <span class="material-symbols-outlined text-[19px]">open_in_new</span>
                 <span>Lihat Website</span>
             </a>
         </nav>
 
         <!-- User Profile & Logout Footer -->
-        <div class="p-4 border-t border-navy-800/80 bg-navy-950/50 flex items-center justify-between">
-            <div class="flex items-center gap-3 overflow-hidden">
-                <div class="w-9 h-9 rounded-full bg-slate-700 text-slate-200 font-bold flex items-center justify-center text-sm shrink-0">
+        <div class="p-3.5 border-t border-white/10 bg-black/20 flex items-center justify-between">
+            <a href="{{ route('admin.profile.index') }}" title="Edit Profil & Ubah Password" class="flex items-center gap-2.5 overflow-hidden hover:opacity-80 transition-opacity">
+                <div class="w-8 h-8 rounded-lg bg-amber-500 text-navy-950 font-black flex items-center justify-center text-xs shrink-0 shadow-xs">
                     {{ strtoupper(substr(auth()->user()->name ?? 'A', 0, 1)) }}
                 </div>
                 <div class="truncate">
-                    <div class="text-sm font-semibold text-white truncate">{{ auth()->user()->name ?? 'Administrator' }}</div>
-                    <div class="text-xs text-slate-400 truncate">{{ auth()->user()->email ?? 'admin@appsi.or.id' }}</div>
+                    <div class="text-xs font-bold text-white truncate flex items-center gap-1">
+                        <span>{{ auth()->user()->name ?? 'Administrator' }}</span>
+                        <span class="material-symbols-outlined text-[12px] text-amber-400">edit</span>
+                    </div>
+                    <div class="text-[10px] text-slate-400 truncate">{{ auth()->user()->email ?? 'admin@appsi.or.id' }}</div>
                 </div>
-            </div>
+            </a>
             <form action="{{ route('admin.logout') }}" method="POST" class="shrink-0">
                 @csrf
-                <button type="submit" title="Logout" class="p-2 text-slate-400 hover:text-rose-400 hover:bg-navy-800 rounded-lg transition-colors">
-                    <span class="material-symbols-outlined">logout</span>
+                <button type="submit" title="Logout" class="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-white/5 rounded-lg transition-colors cursor-pointer">
+                    <span class="material-symbols-outlined text-lg">logout</span>
                 </button>
             </form>
         </div>

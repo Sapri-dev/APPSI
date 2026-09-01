@@ -26,14 +26,20 @@
     </section>
 
     @php
-        $ketum = $anggota->where('jabatan', 'Ketua Umum')->first();
-        $wakil = $anggota->where('jabatan', 'Wakil Ketua Umum')->first();
+        $ketum  = $anggota->where('jabatan', 'Ketua Umum')->first() ?: $anggota->first();
+        $wakil  = $anggota->where('jabatan', 'Wakil Ketua Umum')->first();
         $sekjen = $anggota->where('jabatan', 'Sekretaris Jenderal')->first();
-        $jajaranPengurus = $anggota->filter(function($i) {
-            return in_array($i->jabatan, ['Ketua I', 'Ketua II', 'Ketua III', 'Bendahara', 'Wakil Bendahara']);
-        });
+
+        $pimpinanIds = array_filter([$ketum?->id, $wakil?->id, $sekjen?->id]);
+
         $korwil = $anggota->filter(function($i) {
-            return str_contains($i->jabatan, 'Koordinator Wilayah');
+            $j = strtolower($i->jabatan);
+            return str_contains($j, 'koordinator') || str_contains($j, 'korwil');
+        });
+        $korwilIds = $korwil->pluck('id')->toArray();
+
+        $jajaranPengurus = $anggota->reject(function($i) use ($pimpinanIds, $korwilIds) {
+            return in_array($i->id, $pimpinanIds) || in_array($i->id, $korwilIds);
         });
     @endphp
 

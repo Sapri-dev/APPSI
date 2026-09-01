@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', '38 Provinsi Anggota - APPSI')
+@section('title', 'Provinsi Anggota - APPSI')
 
 @push('styles')
 <style>
@@ -86,7 +86,7 @@
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
             <div>
                 <span class="text-xs font-bold uppercase tracking-widest text-[#3b5fc0] block mb-1">Anggota Resmi</span>
-                <h1 class="text-3xl font-extrabold text-primary">38 Provinsi Seluruh Indonesia</h1>
+                <h1 class="text-3xl font-extrabold text-primary">Provinsi Anggota Seluruh Indonesia</h1>
                 <p class="text-slate-500 text-sm mt-1">Klik atau arahkan kursor ke provinsi untuk melihat detail</p>
             </div>
             {{-- Info aktif --}}

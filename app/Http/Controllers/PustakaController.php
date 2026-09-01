@@ -22,8 +22,29 @@ class PustakaController extends Controller
 
     public function index(Request $request, string $kategori = 'semua')
     {
-        $kategoriValid = array_keys(self::KATEGORI_LABEL);
+        $saved = \App\Models\Pengaturan::get('kategori_pustaka_list');
+        $savedList = $saved ? json_decode($saved, true) : [];
+        if (!is_array($savedList)) $savedList = [];
 
+        // Kategori yang memiliki dokumen terpublikasi
+        $kategoriDiDb = Pustaka::published()->pluck('kategori')->filter()->unique()->toArray();
+        $semuaKategori = array_values(array_unique(array_merge(['uu', 'adart', 'rekomendasi', 'sk', 'berita_acara', 'data_bps'], $savedList, $kategoriDiDb)));
+
+        $kategoriLabel = ['semua' => 'Semua Pustaka'];
+        foreach ($semuaKategori as $katKey) {
+            $lbl = match($katKey) {
+                'uu'           => 'Undang-Undang',
+                'adart'        => 'AD/ART',
+                'rekomendasi'  => 'Rekomendasi',
+                'sk'           => 'SK',
+                'berita_acara' => 'Berita Acara',
+                'data_bps'     => 'Data BPS',
+                default        => $katKey,
+            };
+            $kategoriLabel[$katKey] = $lbl;
+        }
+
+        $kategoriValid = array_keys($kategoriLabel);
         if (!in_array($kategori, $kategoriValid)) {
             $kategori = 'semua';
         }
@@ -51,25 +72,30 @@ class PustakaController extends Controller
 
         $dokumen = $query->get();
 
-        // Hitung jumlah per kategori untuk badge tab
+        // Hitung jumlah per kategori untuk badge tab (hanya tampilkan yang ber-dokumen / ada di db)
         $counts = [];
-        foreach (self::KATEGORI_LABEL as $key => $lbl) {
+        foreach ($kategoriLabel as $key => $lbl) {
             $counts[$key] = $key === 'semua'
                 ? Pustaka::where('is_published', true)->count()
                 : Pustaka::where('is_published', true)->where('kategori', $key)->count();
         }
 
-        // Daftar tahun untuk filter khusus Data BPS (2020, 2019, 2018)
-        $tahunList = Pustaka::where('is_published', true)
+        // Daftar tahun untuk filter dokumen (scoped per kategori aktif jika ada)
+        $tahunQuery = Pustaka::where('is_published', true)
             ->whereNotNull('tahun')
-            ->where('tahun', '!=', '')
+            ->where('tahun', '!=', '');
+
+        if ($kategori !== 'semua') {
+            $tahunQuery->where('kategori', $kategori);
+        }
+
+        $tahunList = $tahunQuery
+            ->reorder('tahun', 'desc')
             ->select('tahun')
             ->distinct()
-            ->orderBy('tahun', 'desc')
             ->pluck('tahun');
 
-        $kategoriLabel = self::KATEGORI_LABEL;
-        $aktifLabel    = self::KATEGORI_LABEL[$kategori];
+        $aktifLabel = $kategoriLabel[$kategori] ?? 'Dokumen';
 
         return view('pages.pustaka', compact('dokumen', 'kategori', 'kategoriLabel', 'aktifLabel', 'search', 'tahun', 'counts', 'tahunList'));
     }

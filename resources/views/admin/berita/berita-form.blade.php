@@ -54,13 +54,80 @@
                 </div>
             </div>
 
-            {{-- Kolom Kanan: Pengaturan Publikasi, Kategori & Gambar (4 Kolom) --}}
+            {{-- Kolom Kanan: Pengaturan Kategori, Gambar & Publikasi (4 Kolom) --}}
             <div class="lg:col-span-4 space-y-6">
-                <!-- Card Status Publikasi & Aksi -->
+                <!-- 1. Card Kategori Berita -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                            <span class="material-symbols-outlined text-amber-500">category</span>
+                            <span>Kategori Berita</span>
+                        </h3>
+                    </div>
+
+                    @php
+                        $selectedKategori = old('kategori', $berita->kategori ?? 'Berita');
+                        $isCustom = !in_array($selectedKategori, $daftarKategori ?? []) && !empty($selectedKategori) && $selectedKategori !== '__baru__';
+                    @endphp
+
+                    <div>
+                        <label for="kategori" class="block text-xs font-semibold text-slate-600 mb-1.5">Pilih Kategori</label>
+                        <select id="kategori" name="kategori" required
+                            class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 focus:bg-white focus:outline-none focus:border-navy-900 focus:ring-1 focus:ring-navy-900 transition-colors">
+                            @foreach($daftarKategori ?? ['Berita', 'Munas', 'Rapat Kerja Nasional', 'Seminar Nasional', 'Kegiatan', 'Siaran Pers', 'Umum'] as $kat)
+                                <option value="{{ $kat }}" {{ $selectedKategori == $kat ? 'selected' : '' }}>{{ $kat }}</option>
+                            @endforeach
+                            @if($isCustom)
+                                <option value="{{ $selectedKategori }}" selected>{{ $selectedKategori }} (Kustom)</option>
+                            @endif
+                            <option value="__baru__" {{ old('kategori') == '__baru__' ? 'selected' : '' }}>+ Tambah Kategori Baru...</option>
+                        </select>
+                    </div>
+
+                    <!-- Input Teks Kategori Baru -->
+                    <div id="kategori_baru_wrap" class="{{ old('kategori') == '__baru__' || old('kategori_baru') ? '' : 'hidden' }} pt-2 border-t border-slate-100 space-y-1.5">
+                        <div class="flex items-center justify-between">
+                            <label for="kategori_baru" class="block text-xs font-bold text-amber-700 uppercase tracking-wider">
+                                Tulis Nama Kategori Baru
+                            </label>
+                            <button type="button" id="btn_cancel_kategori_baru" class="text-[11px] text-slate-400 hover:text-rose-500 transition-colors font-medium">
+                                Batal
+                            </button>
+                        </div>
+                        <input type="text" id="kategori_baru" name="kategori_baru" value="{{ old('kategori_baru') }}"
+                            class="w-full bg-amber-50/60 border border-amber-300 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 focus:bg-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors"
+                            placeholder="Ketik kategori baru (contoh: Workshop, Opini)...">
+                        <p class="text-[11px] text-slate-500 leading-normal">
+                            Kategori baru akan otomatis tersimpan dan muncul di pilihan untuk berita selanjutnya.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 2. Card Gambar Utama / Header -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+                    <h3 class="font-bold text-slate-800 text-sm border-b border-slate-100 pb-3 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-amber-500">image</span>
+                        <span>Gambar Utama</span>
+                    </h3>
+
+                    @if(isset($berita) && $berita->gambar)
+                        <div class="relative rounded-xl overflow-hidden border border-slate-200 aspect-video bg-slate-900">
+                            <img src="{{ $berita->gambar_url }}" alt="Preview" class="w-full h-full object-cover">
+                        </div>
+                    @endif
+
+                    <div>
+                        <label for="gambar" class="block text-xs font-semibold text-slate-600 mb-1.5">{{ isset($berita) && $berita->gambar ? 'Ganti Berkas Gambar' : 'Pilih Berkas Gambar' }}</label>
+                        <input type="file" id="gambar" name="gambar" accept="image/*"
+                            class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 py-1 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-navy-900 file:text-white hover:file:bg-navy-800 transition-colors">
+                    </div>
+                </div>
+
+                <!-- 3. Card Status Publikasi & Tombol Simpan -->
                 <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-5">
                     <h3 class="font-bold text-slate-800 text-sm border-b border-slate-100 pb-3 flex items-center gap-2">
                         <span class="material-symbols-outlined text-amber-500">publish</span>
-                        <span>Status Publikasi</span>
+                        <span>Status & Publikasi</span>
                     </h3>
 
                     <!-- Tanggal Publikasi -->
@@ -87,49 +154,10 @@
                         <a href="{{ route('admin.berita.index') }}" class="flex-1 text-center py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl transition-colors">
                             Batal
                         </a>
-                        <button type="submit" class="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 text-navy-950 font-bold text-xs rounded-xl shadow-md transition-all inline-flex items-center justify-center gap-1.5">
+                        <button type="submit" class="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 text-navy-950 font-bold text-xs rounded-xl shadow-md transition-all inline-flex items-center justify-center gap-1.5 cursor-pointer">
                             <span class="material-symbols-outlined text-sm">save</span>
                             <span>{{ $berita ? 'Simpan' : 'Terbitkan' }}</span>
                         </button>
-                    </div>
-                </div>
-
-                <!-- Card Kategori Berita -->
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
-                    <h3 class="font-bold text-slate-800 text-sm border-b border-slate-100 pb-3 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-amber-500">category</span>
-                        <span>Kategori Berita</span>
-                    </h3>
-
-                    <div>
-                        <select id="kategori" name="kategori" required
-                            class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 focus:bg-white focus:outline-none focus:border-navy-900 focus:ring-1 focus:ring-navy-900 transition-colors">
-                            <option value="Berita" {{ old('kategori', $berita->kategori ?? '') == 'Berita' ? 'selected' : '' }}>Berita</option>
-                            <option value="Munas" {{ old('kategori', $berita->kategori ?? '') == 'Munas' ? 'selected' : '' }}>Munas</option>
-                            <option value="Rapat Kerja Nasional" {{ old('kategori', $berita->kategori ?? '') == 'Rapat Kerja Nasional' ? 'selected' : '' }}>Rapat Kerja Nasional</option>
-                            <option value="Seminar Nasional" {{ old('kategori', $berita->kategori ?? '') == 'Seminar Nasional' ? 'selected' : '' }}>Seminar Nasional</option>
-                            <option value="Umum" {{ old('kategori', $berita->kategori ?? '') == 'Umum' ? 'selected' : '' }}>Umum</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Card Gambar Utama / Header -->
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
-                    <h3 class="font-bold text-slate-800 text-sm border-b border-slate-100 pb-3 flex items-center gap-2">
-                        <span class="material-symbols-outlined text-amber-500">image</span>
-                        <span>Gambar Utama</span>
-                    </h3>
-
-                    @if(isset($berita) && $berita->gambar)
-                        <div class="relative rounded-xl overflow-hidden border border-slate-200 aspect-video bg-slate-900">
-                            <img src="{{ $berita->gambar_url }}" alt="Preview" class="w-full h-full object-cover">
-                        </div>
-                    @endif
-
-                    <div>
-                        <label for="gambar" class="block text-xs font-semibold text-slate-600 mb-1.5">{{ isset($berita) && $berita->gambar ? 'Ganti Berkas Gambar' : 'Pilih Berkas Gambar' }}</label>
-                        <input type="file" id="gambar" name="gambar" accept="image/*"
-                            class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 py-1 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-navy-900 file:text-white hover:file:bg-navy-800 transition-colors">
                     </div>
                 </div>
             </div>
@@ -157,6 +185,40 @@
                     'removeformat | link table code fullscreen',
                 content_style: 'body { font-family: Plus Jakarta Sans, sans-serif; font-size:14px }'
             });
+        }
+
+        // Handle Kategori Baru toggle
+        const kategoriSelect = document.getElementById('kategori');
+        const kategoriBaruWrap = document.getElementById('kategori_baru_wrap');
+        const kategoriBaruInput = document.getElementById('kategori_baru');
+        const btnCancelKategoriBaru = document.getElementById('btn_cancel_kategori_baru');
+
+        if (kategoriSelect && kategoriBaruWrap) {
+            kategoriSelect.addEventListener('change', function () {
+                if (this.value === '__baru__') {
+                    kategoriBaruWrap.classList.remove('hidden');
+                    if (kategoriBaruInput) {
+                        kategoriBaruInput.focus();
+                        kategoriBaruInput.required = true;
+                    }
+                } else {
+                    kategoriBaruWrap.classList.add('hidden');
+                    if (kategoriBaruInput) {
+                        kategoriBaruInput.required = false;
+                    }
+                }
+            });
+
+            if (btnCancelKategoriBaru) {
+                btnCancelKategoriBaru.addEventListener('click', function () {
+                    kategoriSelect.value = 'Berita';
+                    kategoriBaruWrap.classList.add('hidden');
+                    if (kategoriBaruInput) {
+                        kategoriBaruInput.value = '';
+                        kategoriBaruInput.required = false;
+                    }
+                });
+            }
         }
     });
 </script>

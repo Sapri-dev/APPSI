@@ -89,57 +89,88 @@
         </div>
     </div>
 
-    <!-- Recent News Table -->
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-        <div class="p-5 border-b border-slate-100 flex items-center justify-between">
-            <h4 class="font-bold text-slate-800 text-sm">Berita Terakhir Ditambahkan</h4>
-            <a href="{{ route('admin.berita.index') }}" class="text-xs font-semibold text-navy-700 hover:text-navy-900">Lihat Semua</a>
+    <!-- Recent News & Activity Log Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {{-- Left: Berita Terakhir (7 cols) --}}
+        <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+            <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+                <h4 class="font-bold text-slate-800 text-sm">Berita Terakhir Ditambahkan</h4>
+                <a href="{{ route('admin.berita.index') }}" class="text-xs font-semibold text-navy-700 hover:text-navy-900">Lihat Semua</a>
+            </div>
+
+            @if($beritaTerbaru->count() > 0)
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-slate-50 text-slate-500 uppercase font-semibold border-b border-slate-100">
+                            <tr>
+                                <th class="px-5 py-3">Judul Berita</th>
+                                <th class="px-5 py-3">Kategori</th>
+                                <th class="px-5 py-3">Status</th>
+                                <th class="px-5 py-3 text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            @foreach($beritaTerbaru as $b)
+                                <tr class="hover:bg-slate-50/80 transition-colors">
+                                    <td class="px-5 py-3.5 font-medium text-slate-900 max-w-xs truncate">
+                                        {{ $b->judul }}
+                                    </td>
+                                    <td class="px-5 py-3.5 text-slate-600 capitalize">
+                                        {{ $b->kategori }}
+                                    </td>
+                                    <td class="px-5 py-3.5">
+                                        @if($b->is_published)
+                                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">Dipublikasi</span>
+                                        @else
+                                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-100 text-slate-600">Draft</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-5 py-3.5 text-right space-x-2">
+                                        <a href="{{ route('admin.berita.edit', $b->id) }}" class="text-indigo-600 hover:text-indigo-800 font-semibold">Edit</a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @else
+                <div class="p-8 text-center text-slate-500 text-xs">
+                    Belum ada berita yang diterbitkan.
+                </div>
+            @endif
         </div>
 
-        @if($beritaTerbaru->count() > 0)
-            <div class="overflow-x-auto">
-                <table class="w-full text-left text-xs">
-                    <thead class="bg-slate-50 text-slate-500 uppercase font-semibold border-b border-slate-100">
-                        <tr>
-                            <th class="px-5 py-3">Judul Berita</th>
-                            <th class="px-5 py-3">Kategori</th>
-                            <th class="px-5 py-3">Tanggal</th>
-                            <th class="px-5 py-3">Status</th>
-                            <th class="px-5 py-3 text-right">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100">
-                        @foreach($beritaTerbaru as $b)
-                            <tr class="hover:bg-slate-50/80 transition-colors">
-                                <td class="px-5 py-3.5 font-medium text-slate-900 max-w-xs truncate">
-                                    {{ $b->judul }}
-                                </td>
-                                <td class="px-5 py-3.5 text-slate-600 capitalize">
-                                    {{ $b->kategori }}
-                                </td>
-                                <td class="px-5 py-3.5 text-slate-500">
-                                    {{ $b->tanggal_publikasi ? $b->tanggal_publikasi->format('d M Y') : '-' }}
-                                </td>
-                                <td class="px-5 py-3.5">
-                                    @if($b->is_published)
-                                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">Dipublikasi</span>
-                                    @else
-                                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-100 text-slate-600">Draft</span>
-                                    @endif
-                                </td>
-                                <td class="px-5 py-3.5 text-right space-x-2">
-                                    <a href="{{ route('admin.berita.edit', $b->id) }}" class="text-slate-600 hover:text-indigo-600 font-semibold">Edit</a>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+        {{-- Right: Activity Log Terbaru (5 cols) --}}
+        <div class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden flex flex-col">
+            <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+                <h4 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+                    <span class="material-symbols-outlined text-amber-500 text-base">history</span>
+                    <span>Jejak Aktivitas Terbaru</span>
+                </h4>
+                <span class="text-[11px] font-semibold text-slate-400">Otomatis Ditercatat</span>
             </div>
-        @else
-            <div class="p-8 text-center text-slate-500 text-xs">
-                Belum ada berita yang diterbitkan.
+
+            <div class="p-4 flex-1 divide-y divide-slate-100">
+                @forelse($recentAktivitas as $act)
+                    <div class="py-2.5 first:pt-0 last:pb-0 flex items-start gap-3">
+                        <div class="w-7 h-7 rounded-lg bg-slate-100 text-slate-700 font-extrabold text-[10px] flex items-center justify-center shrink-0 mt-0.5">
+                            {{ strtoupper(substr($act->user_name, 0, 1)) }}
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-center justify-between gap-1">
+                                <span class="text-xs font-bold text-slate-800 truncate">{{ $act->user_name }}</span>
+                                <span class="text-[10px] text-slate-400 font-mono shrink-0">{{ $act->created_at ? $act->created_at->diffForHumans() : '-' }}</span>
+                            </div>
+                            <p class="text-xs text-slate-600 truncate">{{ $act->description }}</p>
+                        </div>
+                    </div>
+                @empty
+                    <div class="p-6 text-center text-slate-400 text-xs">
+                        Belum ada jejak aktivitas tercatat.
+                    </div>
+                @endforelse
             </div>
-        @endif
+        </div>
     </div>
 
 </div>

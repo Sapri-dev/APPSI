@@ -57,14 +57,19 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::put('/berita/{id}', [AdminController::class, 'beritaUpdate'])->name('berita.update');
     Route::delete('/berita/{id}', [AdminController::class, 'beritaDestroy'])->name('berita.destroy');
     Route::patch('/berita/{id}/toggle', [AdminController::class, 'beritaToggle'])->name('berita.toggle');
+    Route::post('/berita/kategori', [AdminController::class, 'beritaKategoriStore'])->name('berita.kategori.store');
+    Route::post('/berita/kategori/rename', [AdminController::class, 'beritaKategoriRename'])->name('berita.kategori.rename');
+    Route::post('/berita/kategori/delete', [AdminController::class, 'beritaKategoriDelete'])->name('berita.kategori.delete');
 
     // Pengurus CRUD
     Route::get('/pengurus', [AdminController::class, 'pengurusIndex'])->name('pengurus.index');
     Route::get('/pengurus/create', [AdminController::class, 'pengurusCreate'])->name('pengurus.create');
     Route::post('/pengurus', [AdminController::class, 'pengurusStore'])->name('pengurus.store');
+    Route::post('/pengurus/reorder', [AdminController::class, 'pengurusReorder'])->name('pengurus.reorder');
     Route::get('/pengurus/{id}/edit', [AdminController::class, 'pengurusEdit'])->name('pengurus.edit');
     Route::put('/pengurus/{id}', [AdminController::class, 'pengurusUpdate'])->name('pengurus.update');
     Route::delete('/pengurus/{id}', [AdminController::class, 'pengurusDestroy'])->name('pengurus.destroy');
+    Route::patch('/pengurus/{id}/toggle', [AdminController::class, 'pengurusToggle'])->name('pengurus.toggle');
 
     // Pustaka CRUD
     Route::get('/pustaka', [AdminController::class, 'pustakaIndex'])->name('pustaka.index');
@@ -73,11 +78,29 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
     Route::get('/pustaka/{id}/edit', [AdminController::class, 'pustakaEdit'])->name('pustaka.edit');
     Route::put('/pustaka/{id}', [AdminController::class, 'pustakaUpdate'])->name('pustaka.update');
     Route::delete('/pustaka/{id}', [AdminController::class, 'pustakaDestroy'])->name('pustaka.destroy');
+    Route::post('/pustaka/kategori', [AdminController::class, 'pustakaKategoriStore'])->name('pustaka.kategori.store');
+    Route::post('/pustaka/kategori/rename', [AdminController::class, 'pustakaKategoriRename'])->name('pustaka.kategori.rename');
+    Route::post('/pustaka/kategori/delete', [AdminController::class, 'pustakaKategoriDelete'])->name('pustaka.kategori.delete');
 
-    // Provinsi (hanya edit)
+    // Provinsi CRUD
     Route::get('/provinsi', [AdminController::class, 'provinsiIndex'])->name('provinsi.index');
+    Route::get('/provinsi/create', [AdminController::class, 'provinsiCreate'])->name('provinsi.create');
+    Route::post('/provinsi', [AdminController::class, 'provinsiStore'])->name('provinsi.store');
     Route::get('/provinsi/{id}/edit', [AdminController::class, 'provinsiEdit'])->name('provinsi.edit');
     Route::put('/provinsi/{id}', [AdminController::class, 'provinsiUpdate'])->name('provinsi.update');
+    Route::delete('/provinsi/{id}', [AdminController::class, 'provinsiDestroy'])->name('provinsi.destroy');
+
+    // Profil Saya & Ubah Password
+    Route::get('/profil', [AdminController::class, 'profileIndex'])->name('profile.index');
+    Route::put('/profil', [AdminController::class, 'profileUpdate'])->name('profile.update');
+
+    // Manajemen User / Staf Admin
+    Route::get('/users', [AdminController::class, 'usersIndex'])->name('users.index');
+    Route::get('/users/create', [AdminController::class, 'usersCreate'])->name('users.create');
+    Route::post('/users', [AdminController::class, 'usersStore'])->name('users.store');
+    Route::get('/users/{id}/edit', [AdminController::class, 'usersEdit'])->name('users.edit');
+    Route::put('/users/{id}', [AdminController::class, 'usersUpdate'])->name('users.update');
+    Route::delete('/users/{id}', [AdminController::class, 'usersDestroy'])->name('users.destroy');
 
     // Pengaturan Website
     Route::get('/pengaturan', [AdminController::class, 'pengaturanIndex'])->name('pengaturan.index');

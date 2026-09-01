@@ -42,16 +42,51 @@
                     <!-- Kategori & Tahun -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
+                            @php
+                                $selectedKategori = old('kategori', $pustaka->kategori ?? 'uu');
+                                $isCustom = !in_array($selectedKategori, $daftarKategori ?? []) && !empty($selectedKategori) && $selectedKategori !== '__baru__';
+                            @endphp
+
                             <label for="kategori" class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Kategori Dokumen <span class="text-rose-500">*</span></label>
                             <select id="kategori" name="kategori" required
                                 class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 focus:bg-white focus:outline-none focus:border-navy-900 focus:ring-1 focus:ring-navy-900 transition-colors">
-                                <option value="adart" {{ old('kategori', $pustaka->kategori ?? '') == 'adart' ? 'selected' : '' }}>AD / ART</option>
-                                <option value="uu" {{ old('kategori', $pustaka->kategori ?? '') == 'uu' ? 'selected' : '' }}>Undang-Undang</option>
-                                <option value="rekomendasi" {{ old('kategori', $pustaka->kategori ?? '') == 'rekomendasi' ? 'selected' : '' }}>Rekomendasi</option>
-                                <option value="sk" {{ old('kategori', $pustaka->kategori ?? '') == 'sk' ? 'selected' : '' }}>Surat Keputusan (SK)</option>
-                                <option value="berita_acara" {{ old('kategori', $pustaka->kategori ?? '') == 'berita_acara' ? 'selected' : '' }}>Berita Acara</option>
-                                <option value="data_bps" {{ old('kategori', $pustaka->kategori ?? '') == 'data_bps' ? 'selected' : '' }}>Data BPS</option>
+                                @foreach($daftarKategori ?? ['uu', 'adart', 'rekomendasi', 'sk', 'berita_acara', 'data_bps'] as $kat)
+                                    @php
+                                        $lbl = match($kat) {
+                                            'uu'          => 'Undang-Undang (UU)',
+                                            'adart'       => 'AD / ART',
+                                            'rekomendasi' => 'Rekomendasi',
+                                            'sk'          => 'Surat Keputusan (SK)',
+                                            'berita_acara'=> 'Berita Acara',
+                                            'data_bps'    => 'Data BPS',
+                                            default       => $kat,
+                                        };
+                                    @endphp
+                                    <option value="{{ $kat }}" {{ $selectedKategori == $kat ? 'selected' : '' }}>{{ $lbl }}</option>
+                                @endforeach
+                                @if($isCustom)
+                                    <option value="{{ $selectedKategori }}" selected>{{ $selectedKategori }} (Kustom)</option>
+                                @endif
+                                <option value="__baru__" {{ old('kategori') == '__baru__' ? 'selected' : '' }}>+ Tambah Kategori Baru...</option>
                             </select>
+
+                            <!-- Input Teks Kategori Baru -->
+                            <div id="kategori_baru_wrap" class="{{ old('kategori') == '__baru__' || old('kategori_baru') ? '' : 'hidden' }} pt-2 space-y-1.5">
+                                <div class="flex items-center justify-between">
+                                    <label for="kategori_baru" class="block text-xs font-bold text-amber-700 uppercase tracking-wider">
+                                        Tulis Nama Kategori Pustaka Baru
+                                    </label>
+                                    <button type="button" id="btn_cancel_kategori_baru" class="text-[11px] text-slate-400 hover:text-rose-500 transition-colors font-medium">
+                                        Batal
+                                    </button>
+                                </div>
+                                <input type="text" id="kategori_baru" name="kategori_baru" value="{{ old('kategori_baru') }}"
+                                    class="w-full bg-amber-50/60 border border-amber-300 rounded-xl px-4 py-2.5 text-sm font-medium text-slate-800 focus:bg-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors"
+                                    placeholder="Ketik nama kategori baru (contoh: Laporan Keuangan, Panduan)...">
+                                <p class="text-[11px] text-slate-500 leading-normal">
+                                    Kategori baru akan otomatis tersimpan dan tersedia untuk dokumen pustaka selanjutnya.
+                                </p>
+                            </div>
                         </div>
 
                         <div>
@@ -140,4 +175,37 @@
         </div>
     </form>
 </div>
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const selectKat = document.getElementById('kategori');
+        const wrapBaru  = document.getElementById('kategori_baru_wrap');
+        const inputBaru = document.getElementById('kategori_baru');
+        const btnCancel = document.getElementById('btn_cancel_kategori_baru');
+        let prevVal     = selectKat ? selectKat.value : '';
+
+        if (!selectKat || !wrapBaru) return;
+
+        selectKat.addEventListener('change', function() {
+            if (this.value === '__baru__') {
+                wrapBaru.classList.remove('hidden');
+                if (inputBaru) inputBaru.focus();
+            } else {
+                wrapBaru.classList.add('hidden');
+                if (inputBaru) inputBaru.value = '';
+                prevVal = this.value;
+            }
+        });
+
+        if (btnCancel) {
+            btnCancel.addEventListener('click', function() {
+                wrapBaru.classList.add('hidden');
+                if (inputBaru) inputBaru.value = '';
+                selectKat.value = prevVal !== '__baru__' ? prevVal : (selectKat.options[0] ? selectKat.options[0].value : '');
+            });
+        }
+    });
+</script>
+@endpush
 @endsection
