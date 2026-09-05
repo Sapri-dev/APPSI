@@ -87,106 +87,149 @@
             </div>
         </div>
 
-        <!-- Navigation Menu -->
-        <nav class="flex-1 px-3 py-4 space-y-1.5 overflow-y-auto">
-            <div class="text-[10px] font-bold tracking-widest text-slate-400/80 uppercase px-3 pt-1 pb-1.5">Menu Utama</div>
-            
-            <!-- Dashboard -->
+        {{-- ── Navigation Menu ── --}}
+        <nav class="flex-1 px-3 py-4 overflow-y-auto space-y-0.5">
+
+            {{-- ① OVERVIEW --}}
+            <div class="px-3 pb-1.5 pt-1">
+                <span class="text-[9px] font-black tracking-[0.15em] text-slate-500 uppercase">Overview</span>
+            </div>
+
+            {{-- Dashboard --}}
             <a href="{{ route('admin.dashboard') }}"
-               class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('admin.dashboard') ? 'bg-amber-500 text-navy-950 font-bold shadow-md shadow-amber-500/20' : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
-                <span class="material-symbols-outlined text-[19px] {{ request()->routeIs('admin.dashboard') ? 'text-navy-950' : 'text-slate-400' }}">dashboard</span>
+               class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('admin.dashboard') ? 'bg-amber-500 text-navy-950 shadow-md shadow-amber-500/30' : 'text-slate-300 hover:bg-white/8 hover:text-white' }}">
+                <span class="material-symbols-outlined text-[18px] {{ request()->routeIs('admin.dashboard') ? 'text-navy-950' : 'text-slate-400' }}" style="font-variation-settings:'FILL' {{ request()->routeIs('admin.dashboard') ? '1' : '0' }}">dashboard</span>
                 <span>Dashboard</span>
             </a>
 
-            <!-- Berita & Artikel -->
+            {{-- Divider --}}
+            <div class="pt-4 pb-1.5">
+                <div class="px-3 mb-1.5">
+                    <span class="text-[9px] font-black tracking-[0.15em] text-slate-500 uppercase">Manajemen Konten</span>
+                </div>
+            </div>
+
+            {{-- Berita & Artikel --}}
             <a href="{{ route('admin.berita.index') }}"
-               class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('admin.berita.*') ? 'bg-amber-500 text-navy-950 font-bold shadow-md shadow-amber-500/20' : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
-                <span class="material-symbols-outlined text-[19px] {{ request()->routeIs('admin.berita.*') ? 'text-navy-950' : 'text-slate-400' }}">newspaper</span>
-                <span>Berita &amp; Artikel</span>
+               class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('admin.berita.*') ? 'bg-amber-500 text-navy-950 shadow-md shadow-amber-500/30' : 'text-slate-300 hover:bg-white/8 hover:text-white' }}">
+                <span class="material-symbols-outlined text-[18px] {{ request()->routeIs('admin.berita.*') ? 'text-navy-950' : 'text-slate-400' }}" style="font-variation-settings:'FILL' {{ request()->routeIs('admin.berita.*') ? '1' : '0' }}">newspaper</span>
+                <span>Berita & Artikel</span>
             </a>
 
-            <!-- Pengurus & Organisasi with Collapsible Tree Submenu -->
-            <div x-data="{ open: {{ request()->routeIs('admin.pengurus.*') ? 'true' : 'false' }} }" class="space-y-0.5">
+            {{-- Pengurus & Dewan (collapsible) --}}
+            <div x-data="{ open: {{ request()->routeIs('admin.pengurus.*') ? 'true' : 'false' }} }">
                 <button type="button" @click="open = !open"
-                    class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all cursor-pointer {{ request()->routeIs('admin.pengurus.*') ? 'bg-white/10 text-amber-400 font-bold border border-white/10 shadow-xs' : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
-                    <div class="flex items-center gap-3">
-                        <span class="material-symbols-outlined text-[19px] {{ request()->routeIs('admin.pengurus.*') ? 'text-amber-400' : 'text-slate-400' }}">groups</span>
-                        <span>Pengurus &amp; Dewan</span>
-                    </div>
-                    <span class="material-symbols-outlined text-base text-slate-400 transition-transform duration-200" :class="open ? 'rotate-180 text-amber-400' : ''">expand_more</span>
+                    class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer
+                    {{ request()->routeIs('admin.pengurus.*') ? 'bg-white/10 text-amber-400 border border-white/10' : 'text-slate-300 hover:bg-white/8 hover:text-white' }}">
+                    <span class="material-symbols-outlined text-[18px] {{ request()->routeIs('admin.pengurus.*') ? 'text-amber-400' : 'text-slate-400' }}" style="font-variation-settings:'FILL' 0">groups</span>
+                    <span class="flex-1 text-left">Pengurus & Dewan</span>
+                    <span class="material-symbols-outlined text-sm transition-transform duration-200 {{ request()->routeIs('admin.pengurus.*') ? 'text-amber-400' : 'text-slate-500' }}" :class="open ? 'rotate-180' : ''">expand_more</span>
                 </button>
-
-                <!-- Submenu Tree -->
-                <div x-show="open" x-cloak x-transition class="ml-4 pl-3 border-l border-slate-700/60 py-1 space-y-0.5 my-1">
-                    <a href="{{ route('admin.pengurus.index', ['jenis' => 'pengurus']) }}"
-                       class="block px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('admin.pengurus.*') && request('jenis') === 'pengurus' ? 'text-amber-400 font-bold bg-amber-500/10' : 'text-slate-400 hover:text-white hover:bg-white/5' }}">
-                        Dewan Pengurus
+                <div x-show="open" x-cloak x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0"
+                     class="ml-5 pl-3 border-l border-slate-700/50 mt-1 mb-1 space-y-0.5">
+                    @foreach([
+                        ['jenis' => 'pengurus',    'label' => 'Dewan Pengurus'],
+                        ['jenis' => 'penasehat',   'label' => 'Dewan Penasehat'],
+                        ['jenis' => 'pakar',       'label' => 'Dewan Pakar'],
+                        ['jenis' => 'sekretariat', 'label' => 'Sekretariat'],
+                    ] as $sub)
+                    <a href="{{ route('admin.pengurus.index', ['jenis' => $sub['jenis']]) }}"
+                       class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-all
+                       {{ request()->routeIs('admin.pengurus.*') && request('jenis') === $sub['jenis'] ? 'text-amber-400 font-bold bg-amber-500/10' : 'text-slate-400 hover:text-white hover:bg-white/5' }}">
+                        <span class="w-1 h-1 rounded-full {{ request()->routeIs('admin.pengurus.*') && request('jenis') === $sub['jenis'] ? 'bg-amber-400' : 'bg-slate-600' }}"></span>
+                        {{ $sub['label'] }}
                     </a>
-                    <a href="{{ route('admin.pengurus.index', ['jenis' => 'penasehat']) }}"
-                       class="block px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('admin.pengurus.*') && request('jenis') === 'penasehat' ? 'text-amber-400 font-bold bg-amber-500/10' : 'text-slate-400 hover:text-white hover:bg-white/5' }}">
-                        Dewan Penasehat
-                    </a>
-                    <a href="{{ route('admin.pengurus.index', ['jenis' => 'pakar']) }}"
-                       class="block px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('admin.pengurus.*') && request('jenis') === 'pakar' ? 'text-amber-400 font-bold bg-amber-500/10' : 'text-slate-400 hover:text-white hover:bg-white/5' }}">
-                        Dewan Pakar
-                    </a>
-                    <a href="{{ route('admin.pengurus.index', ['jenis' => 'sekretariat']) }}"
-                       class="block px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('admin.pengurus.*') && request('jenis') === 'sekretariat' ? 'text-amber-400 font-bold bg-amber-500/10' : 'text-slate-400 hover:text-white hover:bg-white/5' }}">
-                        Sekretariat
-                    </a>
+                    @endforeach
                     <a href="{{ route('admin.pengurus.index') }}"
-                       class="block px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-all {{ request()->routeIs('admin.pengurus.index') && !request('jenis') ? 'text-amber-400 font-bold bg-amber-500/10' : 'text-slate-400 hover:text-white hover:bg-white/5' }}">
+                       class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[11px] font-medium transition-all
+                       {{ request()->routeIs('admin.pengurus.index') && !request('jenis') ? 'text-amber-400 font-bold bg-amber-500/10' : 'text-slate-400 hover:text-white hover:bg-white/5' }}">
+                        <span class="w-1 h-1 rounded-full {{ request()->routeIs('admin.pengurus.index') && !request('jenis') ? 'bg-amber-400' : 'bg-slate-600' }}"></span>
                         Semua Anggota
                     </a>
                 </div>
             </div>
 
-            <!-- Pustaka & Dokumen -->
+            {{-- Pustaka & Dokumen --}}
             <a href="{{ route('admin.pustaka.index') }}"
-               class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('admin.pustaka.*') ? 'bg-amber-500 text-navy-950 font-bold shadow-md shadow-amber-500/20' : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
-                <span class="material-symbols-outlined text-[19px] {{ request()->routeIs('admin.pustaka.*') ? 'text-navy-950' : 'text-slate-400' }}">folder_shared</span>
-                <span>Pustaka &amp; Dokumen</span>
+               class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('admin.pustaka.*') ? 'bg-amber-500 text-navy-950 shadow-md shadow-amber-500/30' : 'text-slate-300 hover:bg-white/8 hover:text-white' }}">
+                <span class="material-symbols-outlined text-[18px] {{ request()->routeIs('admin.pustaka.*') ? 'text-navy-950' : 'text-slate-400' }}" style="font-variation-settings:'FILL' {{ request()->routeIs('admin.pustaka.*') ? '1' : '0' }}">folder_open</span>
+                <span>Pustaka & Dokumen</span>
             </a>
 
-            <!-- Provinsi Anggota -->
+            {{-- Provinsi Anggota --}}
             <a href="{{ route('admin.provinsi.index') }}"
-               class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('admin.provinsi.*') ? 'bg-amber-500 text-navy-950 font-bold shadow-md shadow-amber-500/20' : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
-                <span class="material-symbols-outlined text-[19px] {{ request()->routeIs('admin.provinsi.*') ? 'text-navy-950' : 'text-slate-400' }}">map</span>
+               class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('admin.provinsi.*') ? 'bg-amber-500 text-navy-950 shadow-md shadow-amber-500/30' : 'text-slate-300 hover:bg-white/8 hover:text-white' }}">
+                <span class="material-symbols-outlined text-[18px] {{ request()->routeIs('admin.provinsi.*') ? 'text-navy-950' : 'text-slate-400' }}" style="font-variation-settings:'FILL' {{ request()->routeIs('admin.provinsi.*') ? '1' : '0' }}">map</span>
                 <span>Provinsi Anggota</span>
             </a>
 
-            <div class="text-[10px] font-bold tracking-widest text-slate-400/80 uppercase px-3 pt-5 pb-1.5">Pengaturan &amp; Akses</div>
+            {{-- ② KOMUNIKASI --}}
+            <div class="pt-4 pb-1.5">
+                <div class="px-3 mb-1.5">
+                    <span class="text-[9px] font-black tracking-[0.15em] text-slate-500 uppercase">Komunikasi</span>
+                </div>
+            </div>
 
-            <!-- Pengaturan Beranda -->
+            {{-- Pesan Masuk --}}
+            @php $jumlahPesanBaru = \App\Models\Pesan::baru()->count(); @endphp
+            <a href="{{ route('admin.pesan.index') }}"
+               class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('admin.pesan.*') ? 'bg-amber-500 text-navy-950 shadow-md shadow-amber-500/30' : 'text-slate-300 hover:bg-white/8 hover:text-white' }}">
+                <span class="material-symbols-outlined text-[18px] {{ request()->routeIs('admin.pesan.*') ? 'text-navy-950' : 'text-slate-400' }}" style="font-variation-settings:'FILL' {{ request()->routeIs('admin.pesan.*') ? '1' : '0' }}">mail</span>
+                <span class="flex-1">Pesan Masuk</span>
+                @if($jumlahPesanBaru > 0)
+                    <span class="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full text-[10px] font-black
+                        {{ request()->routeIs('admin.pesan.*') ? 'bg-navy-900 text-white' : 'bg-red-500 text-white' }}">
+                        {{ $jumlahPesanBaru > 9 ? '9+' : $jumlahPesanBaru }}
+                    </span>
+                @endif
+            </a>
+
+            {{-- ③ PENGATURAN --}}
+            <div class="pt-4 pb-1.5">
+                <div class="px-3 mb-1.5">
+                    <span class="text-[9px] font-black tracking-[0.15em] text-slate-500 uppercase">Pengaturan</span>
+                </div>
+            </div>
+
+            {{-- Pengaturan Beranda --}}
             <a href="{{ route('admin.pengaturan.beranda') }}"
-               class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('admin.pengaturan.beranda*') ? 'bg-amber-500 text-navy-950 font-bold shadow-md shadow-amber-500/20' : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
-                <span class="material-symbols-outlined text-[19px] {{ request()->routeIs('admin.pengaturan.beranda*') ? 'text-navy-950' : 'text-slate-400' }}">view_quilt</span>
+               class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('admin.pengaturan.beranda*') ? 'bg-amber-500 text-navy-950 shadow-md shadow-amber-500/30' : 'text-slate-300 hover:bg-white/8 hover:text-white' }}">
+                <span class="material-symbols-outlined text-[18px] {{ request()->routeIs('admin.pengaturan.beranda*') ? 'text-navy-950' : 'text-slate-400' }}" style="font-variation-settings:'FILL' {{ request()->routeIs('admin.pengaturan.beranda*') ? '1' : '0' }}">view_quilt</span>
                 <span>Pengaturan Beranda</span>
             </a>
 
-            <!-- Pengaturan Website -->
+            {{-- Pengaturan Website --}}
             <a href="{{ route('admin.pengaturan.index') }}"
-               class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('admin.pengaturan.index') ? 'bg-amber-500 text-navy-950 font-bold shadow-md shadow-amber-500/20' : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
-                <span class="material-symbols-outlined text-[19px] {{ request()->routeIs('admin.pengaturan.index') ? 'text-navy-950' : 'text-slate-400' }}">settings</span>
+               class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('admin.pengaturan.index') ? 'bg-amber-500 text-navy-950 shadow-md shadow-amber-500/30' : 'text-slate-300 hover:bg-white/8 hover:text-white' }}">
+                <span class="material-symbols-outlined text-[18px] {{ request()->routeIs('admin.pengaturan.index') ? 'text-navy-950' : 'text-slate-400' }}" style="font-variation-settings:'FILL' {{ request()->routeIs('admin.pengaturan.index') ? '1' : '0' }}">tune</span>
                 <span>Pengaturan Website</span>
             </a>
 
-            <!-- Akun Pengelola (Hanya untuk Super Administrator) -->
+            {{-- Akun Pengelola (Super Admin only) --}}
             @if(auth()->user()->isSuperAdmin())
             <a href="{{ route('admin.users.index') }}"
-               class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('admin.users.*') ? 'bg-amber-500 text-navy-950 font-bold shadow-md shadow-amber-500/20' : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
-                <span class="material-symbols-outlined text-[19px] {{ request()->routeIs('admin.users.*') ? 'text-navy-950' : 'text-slate-400' }}">manage_accounts</span>
+               class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('admin.users.*') ? 'bg-amber-500 text-navy-950 shadow-md shadow-amber-500/30' : 'text-slate-300 hover:bg-white/8 hover:text-white' }}">
+                <span class="material-symbols-outlined text-[18px] {{ request()->routeIs('admin.users.*') ? 'text-navy-950' : 'text-slate-400' }}" style="font-variation-settings:'FILL' {{ request()->routeIs('admin.users.*') ? '1' : '0' }}">manage_accounts</span>
                 <span>Akun Pengelola</span>
+                <span class="ml-auto text-[9px] font-black px-1.5 py-0.5 rounded bg-white/10 text-slate-400 tracking-wide">SUPER</span>
             </a>
             @endif
 
-            <!-- Lihat Website -->
+            {{-- Separator --}}
+            <div class="pt-3 pb-1">
+                <div class="border-t border-white/5"></div>
+            </div>
+
+            {{-- Lihat Website --}}
             <a href="{{ route('home') }}" target="_blank"
-               class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-400 hover:bg-white/5 hover:text-white transition-all">
-                <span class="material-symbols-outlined text-[19px]">open_in_new</span>
+               class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-medium text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-all">
+                <span class="material-symbols-outlined text-[18px] text-slate-600">open_in_new</span>
                 <span>Lihat Website</span>
+                <span class="ml-auto text-[9px] text-slate-600">↗</span>
             </a>
+
         </nav>
+
 
         <!-- User Profile & Logout Footer -->
         <div class="p-3.5 border-t border-white/10 bg-black/20 flex items-center justify-between">

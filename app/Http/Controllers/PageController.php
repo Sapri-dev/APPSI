@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\PesanMasukMail;
 use App\Models\Berita;
 use App\Models\Pengaturan;
+use App\Models\Pesan;
 use App\Models\Provinsi;
 use App\Services\YouTubeService;
 use App\Services\InstagramService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class PageController extends Controller
 {
@@ -102,5 +106,35 @@ class PageController extends Controller
         ];
 
         return view('pages.hubungi', compact('pengaturan'));
+    }
+
+    public function kirimPesan(Request $request)
+    {
+        $validated = $request->validate([
+            'nama'   => 'required|string|max:100',
+            'email'  => 'required|email|max:100',
+            'subjek' => 'required|string|max:200',
+            'pesan'  => 'required|string|max:5000',
+        ], [
+            'nama.required'   => 'Nama lengkap wajib diisi.',
+            'email.required'  => 'Alamat email wajib diisi.',
+            'email.email'     => 'Format email tidak valid.',
+            'subjek.required' => 'Subjek pesan wajib diisi.',
+            'pesan.required'  => 'Isi pesan wajib diisi.',
+        ]);
+
+        // Simpan ke database
+        $pesanBaru = Pesan::create($validated);
+
+        // Kirim notifikasi email ke admin
+        $emailAdmin = Pengaturan::get('email', config('mail.from.address'));
+        try {
+            Mail::to($emailAdmin)->send(new PesanMasukMail($pesanBaru));
+        } catch (\Exception $e) {
+            // Gagal kirim email tidak menggagalkan proses — pesan tetap tersimpan
+            logger()->error('Gagal kirim email notifikasi pesan: ' . $e->getMessage());
+        }
+
+        return back()->with('success', 'Pesan Anda berhasil terkirim! Kami akan segera menghubungi Anda.');
     }
 }

@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\PengurusController as AdminPengurusController;
 use App\Http\Controllers\Admin\PustakaController as AdminPustakaController;
 use App\Http\Controllers\Admin\ProvinsiController as AdminProvinsiController;
 use App\Http\Controllers\Admin\PengaturanController;
+use App\Http\Controllers\Admin\PesanController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\UserController;
 
@@ -26,6 +27,7 @@ Route::get('/', [PageController::class, 'beranda'])->name('home');
 Route::get('/sejarah', [PageController::class, 'sejarah'])->name('sejarah');
 Route::redirect('/visi-misi', '/#visi-misi')->name('visi-misi');
 Route::get('/hubungi', [PageController::class, 'hubungi'])->name('hubungi');
+Route::post('/hubungi', [PageController::class, 'kirimPesan'])->name('hubungi.kirim');
 
 // Dewan
 Route::get('/dewan-pengurus', [PengurusController::class, 'pengurus'])->name('dewan-pengurus');
@@ -120,4 +122,10 @@ Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
 
     // Instagram — Refresh Cache Manual
     Route::post('/instagram/refresh', [PengaturanController::class, 'instagramRefresh'])->name('instagram.refresh');
+
+    // Pesan Masuk (Form Kontak Publik)
+    Route::get('/pesan', [PesanController::class, 'index'])->name('pesan.index');
+    Route::get('/pesan/{pesan}', [PesanController::class, 'show'])->name('pesan.show');
+    Route::delete('/pesan/bulk', [PesanController::class, 'destroyBulk'])->name('pesan.bulk-destroy');
+    Route::delete('/pesan/{pesan}', [PesanController::class, 'destroy'])->name('pesan.destroy');
 });

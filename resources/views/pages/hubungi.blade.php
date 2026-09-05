@@ -100,24 +100,54 @@
                 <p class="font-body-md text-body-md text-on-surface-variant mb-stack-lg">
                     Silakan lengkapi formulir di bawah ini untuk pertanyaan atau aspirasi terkait program kerja APPSI.
                 </p>
-                <form class="space-y-6" id="contactForm">
+
+                {{-- Success --}}
+                @if(session('success'))
+                <div class="flex items-center gap-3 p-4 mb-6 bg-green-50 border border-green-200 rounded-xl text-green-800 text-sm font-medium">
+                    <span class="material-symbols-outlined text-green-600">check_circle</span>
+                    {{ session('success') }}
+                </div>
+                @endif
+
+                {{-- Validation Errors --}}
+                @if($errors->any())
+                <div class="p-4 mb-6 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
+                    <p class="font-semibold mb-1">Mohon periksa kembali isian Anda:</p>
+                    <ul class="list-disc list-inside space-y-0.5">
+                        @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
+
+                <form action="{{ route('hubungi.kirim') }}" method="POST" class="space-y-6">
+                    @csrf
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block font-label-caps text-label-caps text-on-surface-variant mb-2">NAMA LENGKAP</label>
-                            <input class="w-full bg-surface-container-low border-none focus:ring-2 focus:ring-primary rounded-lg py-3 px-4 transition-all" placeholder="Masukkan nama Anda" type="text"/>
+                            <label class="block font-label-caps text-label-caps text-on-surface-variant mb-2">NAMA LENGKAP <span class="text-red-500">*</span></label>
+                            <input name="nama" value="{{ old('nama') }}"
+                                class="w-full bg-surface-container-low border-none focus:ring-2 focus:ring-primary rounded-lg py-3 px-4 transition-all @error('nama') ring-2 ring-red-400 @enderror"
+                                placeholder="Masukkan nama Anda" type="text"/>
                         </div>
                         <div>
-                            <label class="block font-label-caps text-label-caps text-on-surface-variant mb-2">EMAIL</label>
-                            <input class="w-full bg-surface-container-low border-none focus:ring-2 focus:ring-primary rounded-lg py-3 px-4 transition-all" placeholder="email@contoh.com" type="email"/>
+                            <label class="block font-label-caps text-label-caps text-on-surface-variant mb-2">EMAIL <span class="text-red-500">*</span></label>
+                            <input name="email" value="{{ old('email') }}"
+                                class="w-full bg-surface-container-low border-none focus:ring-2 focus:ring-primary rounded-lg py-3 px-4 transition-all @error('email') ring-2 ring-red-400 @enderror"
+                                placeholder="email@contoh.com" type="email"/>
                         </div>
                     </div>
                     <div>
-                        <label class="block font-label-caps text-label-caps text-on-surface-variant mb-2">SUBJEK</label>
-                        <input class="w-full bg-surface-container-low border-none focus:ring-2 focus:ring-primary rounded-lg py-3 px-4 transition-all" placeholder="Pilih topik pesan Anda" type="text"/>
+                        <label class="block font-label-caps text-label-caps text-on-surface-variant mb-2">SUBJEK <span class="text-red-500">*</span></label>
+                        <input name="subjek" value="{{ old('subjek') }}"
+                            class="w-full bg-surface-container-low border-none focus:ring-2 focus:ring-primary rounded-lg py-3 px-4 transition-all @error('subjek') ring-2 ring-red-400 @enderror"
+                            placeholder="Topik pesan Anda" type="text"/>
                     </div>
                     <div>
-                        <label class="block font-label-caps text-label-caps text-on-surface-variant mb-2">PESAN</label>
-                        <textarea class="w-full bg-surface-container-low border-none focus:ring-2 focus:ring-primary rounded-lg py-3 px-4 transition-all" placeholder="Tuliskan pesan Anda di sini..." rows="5"></textarea>
+                        <label class="block font-label-caps text-label-caps text-on-surface-variant mb-2">PESAN <span class="text-red-500">*</span></label>
+                        <textarea name="pesan" rows="5"
+                            class="w-full bg-surface-container-low border-none focus:ring-2 focus:ring-primary rounded-lg py-3 px-4 transition-all @error('pesan') ring-2 ring-red-400 @enderror"
+                            placeholder="Tuliskan pesan Anda di sini...">{{ old('pesan') }}</textarea>
                     </div>
                     <button class="w-full md:w-auto bg-secondary-container text-on-secondary-container font-button text-button px-stack-lg py-4 rounded-lg hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-2" type="submit">
                         Kirim Pesan
@@ -139,30 +169,3 @@
     </div>
 </section>
 @endsection
-
-@push('scripts')
-<script>
-    document.getElementById('contactForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const btn = this.querySelector('button');
-        const originalText = btn.innerHTML;
-        
-        btn.innerHTML = 'Mengirim...';
-        btn.disabled = true;
-        
-        setTimeout(() => {
-            btn.innerHTML = '<span class="material-symbols-outlined">check_circle</span> Terkirim';
-            btn.classList.replace('bg-secondary-container', 'bg-green-600');
-            btn.classList.replace('text-on-secondary-container', 'text-white');
-            
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.classList.replace('bg-green-600', 'bg-secondary-container');
-                btn.classList.replace('text-white', 'text-on-secondary-container');
-                btn.disabled = false;
-                this.reset();
-            }, 3000);
-        }, 1500);
-    });
-</script>
-@endpush
