@@ -5,7 +5,7 @@
 
     {{-- Kiri: Logo --}}
     <a href="{{ route('home') }}" class="flex items-center shrink-0">
-        <img src="{{ asset('images/Logo-appsi.png') }}" alt="APPSI - Asosiasi Pemerintah Provinsi Seluruh Indonesia"
+        <img src="{{ $appsiLogo ?? asset('images/Logo-appsi.png') }}" alt="APPSI - Asosiasi Pemerintah Provinsi Seluruh Indonesia"
             style="height: 50px; width: auto; object-fit: contain;">
     </a>
 

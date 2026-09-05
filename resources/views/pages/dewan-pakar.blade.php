@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dewan Pakar APPSI 2025–2029')
+@section('title', 'Dewan Pakar APPSI ' . ($appsiPeriode ?? ''))
 
 @section('content')
 <div class="max-w-[1200px] mx-auto px-4 md:px-8 py-8 space-y-10">
@@ -16,7 +16,7 @@
         </nav>
         <div>
             <h1 class="font-headline-lg-mobile md:font-headline-lg text-primary">Dewan Pakar APPSI</h1>
-            <p class="text-slate-600 text-sm mt-1">Masa Bakti 2025 – 2029</p>
+            <p class="text-slate-600 text-sm mt-1">Masa Bakti {{ $appsiPeriode }}</p>
         </div>
     </section>
 

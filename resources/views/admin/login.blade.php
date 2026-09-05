@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Administrator — APPSI</title>
+    <link rel="icon" type="image/png" href="{{ $appsiEmblem ?? asset('images/Logo-appsi-emblem.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -287,7 +288,7 @@
     <div class="panel-left">
         <div class="panel-logo">
             <div class="emblem-wrap">
-                <img src="{{ asset('images/Logo-appsi-emblem.png') }}" alt="Logo APPSI">
+                <img src="{{ $appsiEmblem ?? asset('images/Logo-appsi-emblem.png') }}" alt="Logo APPSI">
             </div>
         </div>
 
@@ -311,7 +312,7 @@
         <!-- Mobile logo -->
         <div class="mobile-logo">
             <div class="mobile-emblem-wrap">
-                <img src="{{ asset('images/Logo-appsi-emblem.png') }}" alt="Logo APPSI">
+                <img src="{{ $appsiEmblem ?? asset('images/Logo-appsi-emblem.png') }}" alt="Logo APPSI">
             </div>
             <div>
                 <div class="mobile-logo-name">APPSI</div>

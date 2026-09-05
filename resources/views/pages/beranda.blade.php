@@ -130,19 +130,22 @@
     </div>
 </section>
 
-<!-- Quick Stats -->
+<!-- Quick Stats / Kutipan Tokoh -->
 <section class="px-4 mt-6 max-w-[1200px] mx-auto">
     <div class="bg-surface-container-low border-l-4 border-secondary p-8 rounded-xl shadow-sm">
         <div class="flex flex-col gap-4">
             <span class="material-symbols-outlined text-secondary/40 text-4xl">format_quote</span>
             <p class="font-headline-sm text-headline-sm text-primary italic leading-relaxed">
-                "Amanah ini bukan sekadar kehormatan, tetapi juga tanggung jawab besar untuk memajukan daerah-daerah di seluruh Indonesia,"
+                "{{ $pengaturan['quote_teks'] ?? '' }}"
             </p>
             <div class="flex items-center gap-3 mt-2">
                 <div class="w-8 h-px bg-outline-variant"></div>
                 <p class="font-label-caps text-label-caps text-on-surface-variant font-bold uppercase tracking-wider">
-                    H Rudy Mas’ud
+                    {{ $pengaturan['quote_tokoh'] ?? '' }}
                 </p>
+                @if(!empty($pengaturan['quote_sub']))
+                    <span class="text-xs text-slate-500 font-medium">— {{ $pengaturan['quote_sub'] }}</span>
+                @endif
             </div>
         </div>
     </div>
@@ -162,10 +165,10 @@
             {{-- Kolom Kiri: Foto Resmi Ketua Umum (Utuh & Proporsional) --}}
             <div class="w-full sm:w-72 lg:w-80 shrink-0 flex flex-col">
                 <div class="relative rounded-2xl overflow-hidden shadow-md border border-border-subtle bg-slate-100 aspect-[3/4] w-full group">
-                    <img src="{{ asset('storage/pengurus/kaltim.jpg') }}"
-                         alt="Ketua Umum APPSI - Dr. H. Rudy Mas'ud, SE., ME."
+                    <img src="{{ $pengaturan['foto_ketua_url'] ?? asset('storage/pengurus/kaltim.jpg') }}"
+                         alt="Ketua Umum APPSI - {{ $pengaturan['ketua_umum'] ?? '' }}"
                          class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
-                         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                         onerror="this.src='{{ asset('storage/pengurus/kaltim.jpg') }}'">
                     <div class="hidden w-full h-full items-center justify-center bg-slate-200">
                         <span class="material-symbols-outlined text-secondary text-6xl">person</span>
                     </div>
@@ -174,13 +177,13 @@
                     <div class="absolute bottom-0 inset-x-0 p-4"
                          style="background: linear-gradient(to top, rgba(0,22,71,0.95) 0%, rgba(0,22,71,0.8) 65%, transparent 100%);">
                         <p class="text-[10px] font-black tracking-widest text-secondary uppercase mb-0.5">
-                            KETUA UMUM APPSI {{ $pengaturan['periode'] ?? '2025–2029' }}
+                            KETUA UMUM APPSI {{ !empty($pengaturan['periode']) ? $pengaturan['periode'] : $appsiPeriode }}
                         </p>
                         <p class="text-sm md:text-base font-bold text-white leading-tight">
-                            {{ $pengaturan['ketua_umum'] ?? 'Dr. H. Rudy Mas\'ud, SE., ME.' }}
+                            {{ $pengaturan['ketua_umum'] ?? '' }}
                         </p>
                         <p class="text-[11px] text-slate-200 font-medium mt-0.5">
-                            {{ $pengaturan['ketua_provinsi'] ?? 'Gubernur Kalimantan Timur' }}
+                            {{ $pengaturan['ketua_provinsi'] ?? '' }}
                         </p>
                     </div>
                 </div>
@@ -190,22 +193,25 @@
             <div class="flex-1 flex flex-col justify-center">
                 <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-secondary/15 border border-secondary/20 text-primary text-xs font-bold w-fit mb-3.5">
                     <span class="w-2 h-2 rounded-full bg-secondary"></span>
-                    <span>Asosiasi Pemerintah Provinsi Seluruh Indonesia</span>
+                    <span>{{ $pengaturan['sambutan_badge'] ?? '' }}</span>
                 </div>
 
                 <h3 class="text-2xl sm:text-3xl font-headline-md text-headline-md text-primary font-bold leading-tight mb-2">
-                    Wadah Kerjasama Strategis Antar Provinsi se-Indonesia
+                    {{ $pengaturan['sambutan_judul'] ?? '' }}
                 </h3>
 
                 <div class="w-16 h-1 bg-secondary rounded-full mb-5"></div>
 
                 <div class="space-y-4 text-on-surface-variant text-base md:text-[17px] leading-relaxed font-normal">
-                    <p>
-                        Asosiasi Pemerintahan Provinsi Seluruh Indonesia (APPSI) merupakan organisasi resmi yang menghimpun seluruh Pemerintah Provinsi di Indonesia. APPSI dibentuk sebagai wadah koordinasi nasional guna menyatukan aspirasi daerah provinsi, memperkuat hubungan Pemerintah Pusat dan Pemerintah Daerah, serta mendukung perumusan dan implementasi kebijakan nasional.
-                    </p>
-                    <p>
-                        APPSI berkedudukan sebagai mitra strategis Pemerintah Pusat dan pemangku kepentingan nasional lainnya dalam penyelenggaraan pemerintahan daerah sesuai dengan prinsip Negara Kesatuan Republik Indonesia.
-                    </p>
+                    @php
+                        $rawTeksSambutan = $pengaturan['sambutan_teks'] ?? '';
+                        $paragrafSambutan = array_values(array_filter(explode("\n", str_replace("\r", "", $rawTeksSambutan))));
+                    @endphp
+                    @foreach($paragrafSambutan as $paragraf)
+                        @if(trim($paragraf) !== '')
+                            <p>{{ trim($paragraf) }}</p>
+                        @endif
+                    @endforeach
                 </div>
             </div>
 
@@ -218,30 +224,22 @@
     <div class="max-w-[1200px] mx-auto">
         <div class="bg-secondary-fixed/30 p-8 rounded-2xl border border-secondary/20 mb-8">
             <span class="font-label-caps text-label-caps text-secondary mb-2 block uppercase">Visi APPSI</span>
-            <p class="font-headline-md text-headline-md text-primary leading-tight">{{ $pengaturan['visi'] ?? 'Terwujudnya sinergi nasional Pemerintah Provinsi yang kuat, mandiri, dan berdaya saing dalam mendukung pembangunan nasional berkelanjutan.' }}</p>
+            <p class="font-headline-md text-headline-md text-primary leading-tight">{{ $pengaturan['visi'] ?? '' }}</p>
         </div>
         <h3 class="font-headline-sm text-headline-sm text-primary mb-4">Misi Utama</h3>
+        @php
+            $rawMisi = $pengaturan['misi'] ?? '';
+            $misiItems = array_values(array_filter(explode("\n", str_replace("\r", "", $rawMisi))));
+            $misiIcons = ['handshake', 'sync_alt', 'trending_up', 'campaign', 'groups', 'verified', 'hub'];
+        @endphp
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="bg-surface-white border border-border-subtle p-6 rounded-xl">
-                <span class="material-symbols-outlined text-primary mb-3">handshake</span>
-                <p class="font-body-md text-body-md font-bold text-primary mb-1">Koordinasi Antar Daerah</p>
-                <p class="font-body-md text-body-md text-on-surface-variant">Memperkuat koordinasi dan kerja sama antar Pemerintah Provinsi.</p>
+            @foreach($misiItems as $mIdx => $mText)
+            <div class="bg-surface-white border border-border-subtle p-6 rounded-xl flex flex-col justify-start">
+                <span class="material-symbols-outlined text-primary mb-3 text-3xl">{{ $misiIcons[$mIdx % count($misiIcons)] }}</span>
+                <p class="font-body-md text-body-md font-bold text-primary mb-1">Misi {{ $mIdx + 1 }}</p>
+                <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">{{ trim($mText) }}</p>
             </div>
-            <div class="bg-surface-white border border-border-subtle p-6 rounded-xl">
-                <span class="material-symbols-outlined text-primary mb-3">sync_alt</span>
-                <p class="font-body-md text-body-md font-bold text-primary mb-1">Sinkronisasi Kebijakan</p>
-                <p class="font-body-md text-body-md text-on-surface-variant">Mendorong sinkronisasi kebijakan pusat dan daerah.</p>
-            </div>
-            <div class="bg-surface-white border border-border-subtle p-6 rounded-xl">
-                <span class="material-symbols-outlined text-primary mb-3">trending_up</span>
-                <p class="font-body-md text-body-md font-bold text-primary mb-1">Tata Kelola Pemerintahan</p>
-                <p class="font-body-md text-body-md text-on-surface-variant">Meningkatkan kapasitas tata kelola pemerintahan daerah.</p>
-            </div>
-            <div class="bg-surface-white border border-border-subtle p-6 rounded-xl">
-                <span class="material-symbols-outlined text-primary mb-3">campaign</span>
-                <p class="font-body-md text-body-md font-bold text-primary mb-1">Aspirasi Nasional</p>
-                <p class="font-body-md text-body-md text-on-surface-variant">Menyampaikan aspirasi daerah secara konstruktif di tingkat nasional.</p>
-            </div>
+            @endforeach
         </div>
     </div>
 </section>
@@ -264,8 +262,8 @@
                 <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors duration-300">
                     <span class="material-symbols-outlined text-primary text-3xl">hub</span>
                 </div>
-                <h3 class="font-headline-sm text-headline-sm text-primary mb-2">Koordinasi Nasional</h3>
-                <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">Menyelaraskan kebijakan dan program antar Pemerintah Provinsi dengan kebijakan nasional.</p>
+                <h3 class="font-headline-sm text-headline-sm text-primary mb-2">{{ $pengaturan['peran_1_judul'] ?? '' }}</h3>
+                <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">{{ $pengaturan['peran_1_deskripsi'] ?? '' }}</p>
             </div>
 
             {{-- Advokasi Kebijakan --}}
@@ -273,8 +271,8 @@
                 <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors duration-300">
                     <span class="material-symbols-outlined text-primary text-3xl">policy</span>
                 </div>
-                <h3 class="font-headline-sm text-headline-sm text-primary mb-2">Advokasi Kebijakan</h3>
-                <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">Mewakili kepentingan Pemerintah Provinsi dalam forum nasional dan antar lembaga.</p>
+                <h3 class="font-headline-sm text-headline-sm text-primary mb-2">{{ $pengaturan['peran_2_judul'] ?? '' }}</h3>
+                <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">{{ $pengaturan['peran_2_deskripsi'] ?? '' }}</p>
             </div>
 
             {{-- Penguatan Kapasitas --}}
@@ -282,8 +280,8 @@
                 <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors duration-300">
                     <span class="material-symbols-outlined text-primary text-3xl">school</span>
                 </div>
-                <h3 class="font-headline-sm text-headline-sm text-primary mb-2">Penguatan Kapasitas</h3>
-                <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">Mendorong peningkatan kapasitas kelembagaan dan SDM aparatur daerah.</p>
+                <h3 class="font-headline-sm text-headline-sm text-primary mb-2">{{ $pengaturan['peran_3_judul'] ?? '' }}</h3>
+                <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">{{ $pengaturan['peran_3_deskripsi'] ?? '' }}</p>
             </div>
 
             {{-- Sinergi Pembangunan --}}
@@ -291,8 +289,8 @@
                 <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors duration-300">
                     <span class="material-symbols-outlined text-primary text-3xl">diversity_3</span>
                 </div>
-                <h3 class="font-headline-sm text-headline-sm text-primary mb-2">Sinergi Pembangunan</h3>
-                <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">Mendorong kolaborasi antar daerah untuk pembangunan yang merata dan berkelanjutan.</p>
+                <h3 class="font-headline-sm text-headline-sm text-primary mb-2">{{ $pengaturan['peran_4_judul'] ?? '' }}</h3>
+                <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">{{ $pengaturan['peran_4_deskripsi'] ?? '' }}</p>
             </div>
         </div>
     </div>
@@ -316,8 +314,8 @@
                 <div class="w-16 h-16 rounded-2xl bg-secondary/15 flex items-center justify-center mb-5 group-hover:scale-110 group-hover:bg-secondary transition-all duration-300">
                     <span class="material-symbols-outlined text-secondary group-hover:text-white text-3xl transition-colors duration-300">forum</span>
                 </div>
-                <h3 class="font-headline-sm text-headline-sm text-primary mb-3">Rapat Koordinasi Nasional</h3>
-                <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">Forum rutin antar Pemerintah Provinsi untuk membahas isu strategis nasional dan daerah.</p>
+                <h3 class="font-headline-sm text-headline-sm text-primary mb-3">{{ $pengaturan['program_1_judul'] ?? '' }}</h3>
+                <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">{{ $pengaturan['program_1_deskripsi'] ?? '' }}</p>
             </div>
 
             {{-- Forum Best Practice --}}
@@ -325,8 +323,8 @@
                 <div class="w-16 h-16 rounded-2xl bg-secondary/15 flex items-center justify-center mb-5 group-hover:scale-110 group-hover:bg-secondary transition-all duration-300">
                     <span class="material-symbols-outlined text-secondary group-hover:text-white text-3xl transition-colors duration-300">workspace_premium</span>
                 </div>
-                <h3 class="font-headline-sm text-headline-sm text-primary mb-3">Forum Best Practice</h3>
-                <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">Pertukaran praktik terbaik dalam tata kelola pemerintahan dan pelayanan publik.</p>
+                <h3 class="font-headline-sm text-headline-sm text-primary mb-3">{{ $pengaturan['program_2_judul'] ?? '' }}</h3>
+                <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">{{ $pengaturan['program_2_deskripsi'] ?? '' }}</p>
             </div>
 
             {{-- Kajian & Rekomendasi --}}
@@ -334,8 +332,8 @@
                 <div class="w-16 h-16 rounded-2xl bg-secondary/15 flex items-center justify-center mb-5 group-hover:scale-110 group-hover:bg-secondary transition-all duration-300">
                     <span class="material-symbols-outlined text-secondary group-hover:text-white text-3xl transition-colors duration-300">description</span>
                 </div>
-                <h3 class="font-headline-sm text-headline-sm text-primary mb-3">Kajian &amp; Rekomendasi</h3>
-                <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">Penyusunan kajian kebijakan dan rekomendasi strategis bagi pemerintah pusat.</p>
+                <h3 class="font-headline-sm text-headline-sm text-primary mb-3">{{ $pengaturan['program_3_judul'] ?? '' }}</h3>
+                <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">{{ $pengaturan['program_3_deskripsi'] ?? '' }}</p>
             </div>
         </div>
     </div>

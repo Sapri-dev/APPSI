@@ -15,19 +15,68 @@ class PageController extends Controller
         $sliderBerita  = Berita::published()->take(5)->get();
         $beritaTerbaru = Berita::published()->take(4)->get();
         $provinsi      = Provinsi::ordered()->take(12)->get();
-        $videoTerbaru  = YouTubeService::getLatestVideo();
+
+        $customVideoId = Pengaturan::get('beranda_youtube_video_id');
+        if (!empty($customVideoId)) {
+            $videoTerbaru = [
+                'id'        => $customVideoId,
+                'title'     => 'Dokumentasi Kegiatan Resmi APPSI',
+                'author'    => 'Official APPSI Channel',
+                'thumbnail' => "https://img.youtube.com/vi/{$customVideoId}/hqdefault.jpg",
+            ];
+        } else {
+            $videoTerbaru = YouTubeService::getLatestVideo();
+        }
+
         $igPosts       = InstagramService::getLatestPosts(3);
-        $pengaturan    = [
-            'nama'                  => Pengaturan::get('nama_organisasi', 'APPSI'),
-            'singkatan'             => Pengaturan::get('singkatan', 'APPSI'),
-            'visi'                  => Pengaturan::get('visi'),
-            'misi'                  => Pengaturan::get('misi'),
-            'ketua_umum'            => Pengaturan::get('ketua_umum'),
-            'ketua_provinsi'        => Pengaturan::get('ketua_umum_provinsi'),
-            'periode'               => Pengaturan::get('periode', '2025-2029'),
-            'instagram'             => Pengaturan::get('instagram', 'https://www.instagram.com/appsi.or.id/'),
-            'instagram_widget_code' => Pengaturan::get('instagram_widget_code'),
+
+        $fotoKetua     = Pengaturan::get('beranda_foto_ketua');
+        $fotoKetuaUrl  = $fotoKetua ? asset('storage/' . $fotoKetua) : asset('storage/pengurus/kaltim.jpg');
+
+        $keys = [
+            'nama_organisasi', 'singkatan', 'visi', 'misi',
+            'beranda_quote_teks', 'beranda_quote_tokoh', 'beranda_quote_sub',
+            'ketua_umum', 'ketua_umum_provinsi', 'periode',
+            'beranda_sambutan_badge', 'beranda_sambutan_judul', 'beranda_sambutan_teks',
+            'beranda_peran_1_judul', 'beranda_peran_1_deskripsi',
+            'beranda_peran_2_judul', 'beranda_peran_2_deskripsi',
+            'beranda_peran_3_judul', 'beranda_peran_3_deskripsi',
+            'beranda_peran_4_judul', 'beranda_peran_4_deskripsi',
+            'beranda_program_1_judul', 'beranda_program_1_deskripsi',
+            'beranda_program_2_judul', 'beranda_program_2_deskripsi',
+            'beranda_program_3_judul', 'beranda_program_3_deskripsi',
+            'instagram', 'instagram_widget_code',
         ];
+
+        $pengaturan = [];
+        foreach ($keys as $kunci) {
+            $pengaturan[$kunci] = Pengaturan::get($kunci, '');
+        }
+
+        // Alias penamaan agar kompatibel penuh dengan view beranda
+        $pengaturan['nama']              = $pengaturan['nama_organisasi'];
+        $pengaturan['quote_teks']        = $pengaturan['beranda_quote_teks'];
+        $pengaturan['quote_tokoh']       = $pengaturan['beranda_quote_tokoh'];
+        $pengaturan['quote_sub']         = $pengaturan['beranda_quote_sub'];
+        $pengaturan['ketua_provinsi']    = $pengaturan['ketua_umum_provinsi'];
+        $pengaturan['foto_ketua_url']    = $fotoKetuaUrl;
+        $pengaturan['sambutan_badge']    = $pengaturan['beranda_sambutan_badge'];
+        $pengaturan['sambutan_judul']    = $pengaturan['beranda_sambutan_judul'];
+        $pengaturan['sambutan_teks']     = $pengaturan['beranda_sambutan_teks'];
+        $pengaturan['peran_1_judul']     = $pengaturan['beranda_peran_1_judul'];
+        $pengaturan['peran_1_deskripsi'] = $pengaturan['beranda_peran_1_deskripsi'];
+        $pengaturan['peran_2_judul']     = $pengaturan['beranda_peran_2_judul'];
+        $pengaturan['peran_2_deskripsi'] = $pengaturan['beranda_peran_2_deskripsi'];
+        $pengaturan['peran_3_judul']     = $pengaturan['beranda_peran_3_judul'];
+        $pengaturan['peran_3_deskripsi'] = $pengaturan['beranda_peran_3_deskripsi'];
+        $pengaturan['peran_4_judul']     = $pengaturan['beranda_peran_4_judul'];
+        $pengaturan['peran_4_deskripsi'] = $pengaturan['beranda_peran_4_deskripsi'];
+        $pengaturan['program_1_judul']   = $pengaturan['beranda_program_1_judul'];
+        $pengaturan['program_1_deskripsi'] = $pengaturan['beranda_program_1_deskripsi'];
+        $pengaturan['program_2_judul']   = $pengaturan['beranda_program_2_judul'];
+        $pengaturan['program_2_deskripsi'] = $pengaturan['beranda_program_2_deskripsi'];
+        $pengaturan['program_3_judul']   = $pengaturan['beranda_program_3_judul'];
+        $pengaturan['program_3_deskripsi'] = $pengaturan['beranda_program_3_deskripsi'];
 
         return view('pages.beranda', compact('sliderBerita', 'beritaTerbaru', 'provinsi', 'videoTerbaru', 'igPosts', 'pengaturan'));
     }

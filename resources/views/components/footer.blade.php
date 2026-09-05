@@ -4,9 +4,9 @@
             <div class="flex items-center gap-6">
                 {{-- Logo bulat besar --}}
                 <a href="{{ route('home') }}" class="shrink-0">
-                    <img src="{{ asset('images/Logo-appsi.png') }}"
+                    <img src="{{ $appsiEmblem ?? asset('images/Logo-appsi-emblem.png') }}"
                          alt="APPSI"
-                         style="width: 110px; height: 110px; border-radius: 50%; object-fit: cover; object-position: left center;
+                         style="width: 110px; height: 110px; border-radius: 50%; object-fit: contain; padding: 10px;
                                 box-shadow: 0 0 0 4px rgba(255,255,255,0.18), 0 0 0 8px rgba(255,255,255,0.07);
                                 background: white; display: block;">
                 </a>

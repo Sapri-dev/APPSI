@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('judul');
             $table->string('file')->nullable(); // path storage
             $table->string('file_url')->nullable(); // URL eksternal sebagai fallback
-            $table->enum('kategori', ['uu', 'adart', 'rekomendasi', 'sk', 'berita_acara', 'data_bps']);
+            $table->string('kategori');
             $table->year('tahun')->nullable();
             $table->text('deskripsi')->nullable();
             $table->unsignedBigInteger('unduhan')->default(0);

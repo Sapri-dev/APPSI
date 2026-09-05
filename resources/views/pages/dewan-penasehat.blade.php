@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dewan Penasehat APPSI 2025-2029')
+@section('title', 'Dewan Penasehat APPSI ' . ($appsiPeriode ?? ''))
 
 @push('styles')
 <style>
@@ -27,7 +27,7 @@
                     Dewan Penasehat APPSI
                 </h1>
                 <p class="font-label-caps text-label-caps text-secondary font-bold mb-stack-md tracking-widest uppercase">
-                    Periode 2025 – 2029
+                    Periode {{ $appsiPeriode }}
                 </p>
                 <p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
                     Dewan Penasihat merupakan organ strategis dalam struktur APPSI yang berfungsi memberikan arahan, kearifan kepemimpinan, dan pandangan kebijakan guna memastikan organisasi tetap selaras dengan kepentingan nasional dan daerah.

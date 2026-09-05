@@ -23,9 +23,9 @@
             
             {{-- Logo Bulat APPSI --}}
             <div class="mb-6">
-                <img src="{{ asset('images/Logo-appsi.png') }}"
+                <img src="{{ $appsiEmblem ?? asset('images/Logo-appsi-emblem.png') }}"
                      alt="Logo APPSI"
-                     style="width: 130px; height: 130px; border-radius: 50%; object-fit: cover; object-position: left center;
+                     style="width: 130px; height: 130px; border-radius: 50%; object-fit: contain; padding: 12px;
                             box-shadow: 0 4px 20px rgba(0,0,0,0.08); background: white; border: 1px solid #f1f5f9; display: block;">
             </div>
 

@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Admin Panel') - APPSI</title>
+    <link rel="icon" type="image/png" href="{{ $appsiEmblem ?? asset('images/Logo-appsi-emblem.png') }}">
     
     <!-- Google Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
@@ -57,7 +58,7 @@
     <header class="md:hidden bg-navy-900 text-white p-4 flex items-center justify-between shadow-md fixed top-0 left-0 right-0 z-50">
         <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl bg-white/10 p-1 flex items-center justify-center shrink-0 border border-white/10">
-                <img src="{{ asset('images/Logo-appsi-emblem.png') }}" alt="Logo APPSI" class="w-full h-full object-contain">
+                <img src="{{ $appsiEmblem ?? asset('images/Logo-appsi-emblem.png') }}" alt="Logo APPSI" class="w-full h-full object-contain">
             </div>
             <span class="font-bold text-base">APPSI Admin</span>
         </div>
@@ -77,7 +78,7 @@
         <div class="p-5 border-b border-white/10 bg-navy-950">
             <div class="flex items-center gap-3">
                 <div class="w-11 h-11 rounded-xl bg-white p-1 flex items-center justify-center shrink-0 shadow-md">
-                    <img src="{{ asset('images/Logo-appsi-emblem.png') }}" alt="Logo APPSI" class="w-full h-full object-contain">
+                    <img src="{{ $appsiEmblem ?? asset('images/Logo-appsi-emblem.png') }}" alt="Logo APPSI" class="w-full h-full object-contain">
                 </div>
                 <div class="min-w-0">
                     <h1 class="font-bold text-white text-sm tracking-wide leading-tight">APPSI</h1>
@@ -156,10 +157,17 @@
 
             <div class="text-[10px] font-bold tracking-widest text-slate-400/80 uppercase px-3 pt-5 pb-1.5">Pengaturan &amp; Akses</div>
 
+            <!-- Pengaturan Beranda -->
+            <a href="{{ route('admin.pengaturan.beranda') }}"
+               class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('admin.pengaturan.beranda*') ? 'bg-amber-500 text-navy-950 font-bold shadow-md shadow-amber-500/20' : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
+                <span class="material-symbols-outlined text-[19px] {{ request()->routeIs('admin.pengaturan.beranda*') ? 'text-navy-950' : 'text-slate-400' }}">view_quilt</span>
+                <span>Pengaturan Beranda</span>
+            </a>
+
             <!-- Pengaturan Website -->
             <a href="{{ route('admin.pengaturan.index') }}"
-               class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('admin.pengaturan.*') ? 'bg-amber-500 text-navy-950 font-bold shadow-md shadow-amber-500/20' : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
-                <span class="material-symbols-outlined text-[19px] {{ request()->routeIs('admin.pengaturan.*') ? 'text-navy-950' : 'text-slate-400' }}">settings</span>
+               class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold transition-all {{ request()->routeIs('admin.pengaturan.index') ? 'bg-amber-500 text-navy-950 font-bold shadow-md shadow-amber-500/20' : 'text-slate-300 hover:bg-white/5 hover:text-white' }}">
+                <span class="material-symbols-outlined text-[19px] {{ request()->routeIs('admin.pengaturan.index') ? 'text-navy-950' : 'text-slate-400' }}">settings</span>
                 <span>Pengaturan Website</span>
             </a>
 

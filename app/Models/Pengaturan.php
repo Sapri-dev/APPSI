@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 class Pengaturan extends Model
 {
@@ -30,5 +31,29 @@ class Pengaturan extends Model
     {
         static::updateOrCreate(['kunci' => $kunci], ['nilai' => $nilai]);
         Cache::forget("pengaturan_{$kunci}");
+    }
+
+    /**
+     * URL Logo Utama Website (Horizontal).
+     */
+    public static function logo(): string
+    {
+        $custom = static::get('logo_utama');
+        if ($custom && Storage::disk('public')->exists($custom)) {
+            return asset('storage/' . $custom);
+        }
+        return asset('images/Logo-appsi.png');
+    }
+
+    /**
+     * URL Logo Emblem / Favicon Website (Kotak/Simbol).
+     */
+    public static function emblem(): string
+    {
+        $custom = static::get('logo_emblem');
+        if ($custom && Storage::disk('public')->exists($custom)) {
+            return asset('storage/' . $custom);
+        }
+        return asset('images/Logo-appsi-emblem.png');
     }
 }

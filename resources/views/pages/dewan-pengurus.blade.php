@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dewan Pengurus - APPSI')
+@section('title', 'Dewan Pengurus ' . ($appsiPeriode ?? '') . ' - APPSI')
 
 @section('content')
 <div class="max-w-max-width-content mx-auto px-4 md:px-8 py-8 space-y-10">
@@ -15,13 +15,13 @@
             <span class="text-primary font-bold">Dewan Pengurus</span>
         </nav>
         <h1 class="font-headline-lg-mobile md:font-headline-lg text-primary">Dewan Pengurus</h1>
-        <p class="text-slate-600 text-sm mt-1">Masa Bakti 2025 – 2029</p>
+        <p class="text-slate-600 text-sm mt-1">Masa Bakti {{ $appsiPeriode }}</p>
     </section>
 
     <!-- Intro Text -->
     <section class="bg-surface-white p-6 rounded-2xl border border-border-subtle shadow-xs">
         <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-            Sesuai dengan hasil Musyawarah Nasional APPSI VII, telah ditetapkan susunan Dewan Pengurus Asosiasi Pemerintah Provinsi Seluruh Indonesia (APPSI) Masa Bakti 2025-2029. Struktur ini dirancang untuk memperkuat sinergi antar pemerintah provinsi dalam mewujudkan tata kelola pemerintahan yang responsif, inovatif, dan berintegritas demi kemajuan Indonesia.
+            Sesuai dengan hasil Musyawarah Nasional APPSI VII, telah ditetapkan susunan Dewan Pengurus Asosiasi Pemerintah Provinsi Seluruh Indonesia (APPSI) Masa Bakti {{ $appsiPeriode }}. Struktur ini dirancang untuk memperkuat sinergi antar pemerintah provinsi dalam mewujudkan tata kelola pemerintahan yang responsif, inovatif, dan berintegritas demi kemajuan Indonesia.
         </p>
     </section>
 

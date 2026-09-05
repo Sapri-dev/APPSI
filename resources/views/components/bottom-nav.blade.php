@@ -290,10 +290,10 @@
               border: 1.5px solid #e2e8f0; border-radius: 9999px;
               padding: 5px 12px 5px 6px; margin-right: 4px; text-decoration:none;">
         {{-- Mobile: icon bulat saja --}}
-        <img src="{{ asset('images/Logo-appsi.png') }}" alt="APPSI" class="md:hidden"
-             style="height:36px; width:36px; object-fit:cover; object-position:left center; border-radius:50%;">
+        <img src="{{ $appsiEmblem ?? asset('images/Logo-appsi-emblem.png') }}" alt="APPSI" class="md:hidden"
+             style="height:36px; width:36px; object-fit:contain; border-radius:50%;">
         {{-- Desktop: logo penuh --}}
-        <img src="{{ asset('images/Logo-appsi.png') }}" alt="APPSI" class="hidden md:block"
+        <img src="{{ $appsiLogo ?? asset('images/Logo-appsi.png') }}" alt="APPSI" class="hidden md:block"
              style="height:36px; width:auto; object-fit:contain; max-width:180px;">
     </a>
 

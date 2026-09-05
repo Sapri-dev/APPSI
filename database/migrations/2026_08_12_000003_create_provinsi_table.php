@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('lambang')->nullable(); // path storage
             $table->string('pulau')->nullable(); // Jawa, Sumatera, Kalimantan, dll
             $table->unsignedSmallInteger('urutan')->default(0);
+            $table->string('website')->nullable(); // URL website resmi provinsi
             $table->timestamps();
         });
     }
